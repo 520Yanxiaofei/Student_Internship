@@ -1,0 +1,22 @@
+{
+  "entry": "src/index.js",
+  "disableCSSModules": false,
+  "publicPath": "./",
+  "theme": {
+    "@primary-color": "#3f4a58",
+    "@link-color": "#3f4a58",
+    "@border-radius-base": "2px"
+  },
+  "autoprefixer": null,
+  "extraBabelPlugins": [
+    "transform-runtime",
+    ["import", { "libraryName": "antd", "style": true }]
+  ],
+  "env": {
+    "development": {
+      "extraBabelPlugins": [
+        "dva-hmr"
+      ]
+    }
+  }
+}

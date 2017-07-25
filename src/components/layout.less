@@ -1,0 +1,170 @@
+
+
+:global{
+	.ant-select-dropdown{
+		z-index:1600
+	}
+	.ant-table-tbody > tr > td{
+		word-break:normal; word-wrap:normal;
+	}
+	.ant-tooltip{
+		z-index:1600
+	}
+	
+	.ant-modal-content{
+		border:1px solid #ddd;
+		border-radius:6px;
+		-webkit-border-radius:6px;
+		box-shadow:0 0 67px #868686;
+	    -webkit-box-shadow:0 0 67px #868686
+	}
+}
+.tbText{
+	word-break:normal; word-wrap:normal;
+	line-height: 24px;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+.trText{
+	line-height: 24px;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+.tableTop{
+   margin-top:10px
+}
+.littsmodal{
+	box-shadow:0 0 10px #ddd;
+	-webkit-box-shadow:0 0 10px #ddd
+}
+.pageContents{
+	margin-top:10px;
+}
+.editBtn{
+	cursor:pointer
+}
+
+/*agent下载图标*/
+.ManageLinux{
+	margin:0 auto;
+	width:120px;
+	height:120px;
+	background:url(../assets/font-icon/linux.png) no-repeat center 0;
+	background-size:100%;
+}
+.ManageWindows{
+	margin:0 auto;
+	width:120px;
+	height:120px;
+	background:url(../assets/font-icon/windows.png) no-repeat center 0;
+	background-size:100%;
+}
+.DownloadBtn{
+	width:100%;
+	margin-top:20px;
+}
+
+/*态势table*/
+.SituationTable{
+	margin:20px;
+	width:calc(100% - 7px);
+	border-collapse: collapse;
+	display: table;
+}
+.SituationTable tr{
+	line-height:30px;
+	text-align:center
+}
+.SituationTable thead{
+}
+.SituationTable thead td{
+	font-weight:bold;
+	line-height:40px;
+	color:#333;
+	border:1px solid #eee
+}
+.SituationTable tbody td{
+	border:1px solid #eee
+}
+.SituationTable thead tr td:nth-child(1){
+
+}
+.SituationTable tbody{
+}
+.SituationTable tbody tr td:nth-child(2){
+}
+
+/*加入白名单*/
+.Alarmcheckbox{
+	position:absolute;
+	top:0;
+	right:-40px;
+}
+
+.whiteTr{
+	line-height: 24px;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+/*agent进度*/
+.loadContainer {
+  width: 10em;
+  height: 10em;
+  margin:0 auto;
+  position: relative;
+  overflow: hidden;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.loadContainer .loader {
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border: 1.1em solid rgb(255, 160, 160);
+  border-left:1.1em solid rgb(221, 50, 50);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+.loadContainer .locadContainerText{
+	position:absolute;
+	left:0;
+	top:38px;
+	right:0;
+	bottom:0;
+	margin:0 auto
+}
+.loadContainer .loader,
+.loadContainer .loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

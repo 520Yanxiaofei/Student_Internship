@@ -1,0 +1,88 @@
+.LoginTop{
+	background:@primary-color;
+	height:300px;
+}
+.LoginTitle{
+	padding-top:60px;
+	
+	text-align:center;
+	line-height:30px;
+	position:relative
+}
+.LoginTitle a{
+	color:#fff;
+}
+.LoginHistory{
+	position:absolute;
+	top:20px;
+	left:20px;
+}
+
+.LoginTitle h3{
+	color:#babfc8;
+	font-weight:normal
+}
+.LoginContent{
+	position:relative;
+	width:600px;
+	padding-right:280px;
+	margin:0 auto;
+	background:#fff;
+	margin-top:-110px;
+	margin-bottom:20px;
+	background:#fff url('../../assets/login_banner.png') no-repeat right bottom;
+	background-size:40%;
+}
+.LoginContent:after{
+	content:'';
+	width:25px;
+	height:200px;
+	position:absolute;
+	top:30px;
+	right:-25px;
+	background:url('../../assets/login_shadow.png') no-repeat top right;
+	background-size:100%;
+}
+.LoginForm{
+	padding:20px;
+}
+.LoginUserimg{
+	display:block;
+	width:72px;
+	height:72px;
+	margin:15px auto;
+	margin-bottom:25px;
+}
+:global{
+	.LoginForm .login-form {
+	  max-width: 300px;
+	}
+	.LoginForm .login-form-forgot {
+	  float: right;
+	}
+	.ant-btn.login-form-button{
+		width:100%;
+		background:@link-color;
+		border-color:@link-color;
+		color:#fff
+	}
+	.ant-btn.login-form-buttonDe{
+		width: 100%;
+		border-color:@link-color;
+		color:@link-color;
+	}
+	.steps-action{
+		margin-left:80px;
+		height:32px;
+	}
+	.steps-action .ant-btn-primary{
+		background:@link-color;
+		border-color:@link-color;
+	}
+	.has-success.has-feedback:after, .has-warning.has-feedback:after, .has-error.has-feedback:after, .is-validating.has-feedback:after{
+		right:-30px;
+	}
+}
+.ResigBottom{
+	margin-bottom:15px;
+}

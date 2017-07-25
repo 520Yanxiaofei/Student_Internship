@@ -1,0 +1,57 @@
+[{
+	"key": "1",
+	"name": "统计展示",
+	"router": "/",
+	"icon": "right-circle-o",
+	"menulever": []
+}, {
+	"key": "2",
+	"name": "企业信息",
+	"router": "/company",
+	"icon": "share-alt",
+	"menulever": []
+}, {
+	"key": "3",
+	"name": "用户管理",
+	"router": "/user_list",
+	"icon": "share-alt",
+	"menulever": []
+}, {
+	"key": "sub1",
+	"name": "岗位管理",
+	"router": "",
+	"icon": "share-alt",
+	"menulever": [{
+		"key": "4",
+		"name": "新增岗位",
+		"router": "/station_add"
+	}, {
+		"key": "5",
+		"name": "岗位列表",
+		"router": "/station_list"
+	}]
+}, {
+	"key": "sub2",
+	"name": "文章管理",
+	"router": "",
+	"icon": "bars",
+	"menulever": [{
+		"key": "6",
+		"name": "新增文章",
+		"router": "/new_add",
+		"icon": "bars",
+		"menulever": []
+	}, {
+		"key": "7",
+		"name": "所有文章",
+		"router": "/new_list",
+		"icon": "bars",
+		"menulever": []
+	}]
+}, {
+	"key": "8",
+	"name": "密码修改",
+	"router": "/pad_udp",
+	"icon": "retweet",
+	"menulever": []
+}]
