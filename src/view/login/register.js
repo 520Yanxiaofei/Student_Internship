@@ -3,6 +3,9 @@ import {
 	connect
 } from 'dva';
 import {
+	Link
+} from 'dva/router';
+import {
 	Spin,
 	Icon,
 	message,
@@ -11,19 +14,12 @@ import {
 	Button,
 	Row,
 	Col,
-	Steps,
-	Radio,
-	Upload,
-	Alert
 } from 'antd';
-import {
-	Link
-} from 'dva/router';
 import styles from './index.less';
-import QueueAnim from 'rc-queue-anim';
+import Login from './login';
+import Register from './register';
+import Footer from '../../components/footer/footer';
 const FormItem = Form.Item;
-const Step = Steps.Step;
-const RadioGroup = Radio.Group;
 
 
 /*注册板块*/
@@ -45,376 +41,181 @@ const formItemLayout = {
 		},
 	},
 };
-/*基本信息*/
-class UserName extends React.Component {
-	handleSubmit = (e) => {
-		e.preventDefault();
-		this.props.form.validateFieldsAndScroll((err, values) => {
-			if (!err) {
-				console.log('Received values of form: ', values);
-			}
-		});
-	}
-	render() {
-		const {
-			getFieldDecorator
-		} = this.props.form;
-		return (
-			<QueueAnim type="bottom">
-                  <h2 style={{textAlign:'center',marginBottom:15}}>填写基本信息</h2>
-			      <div key="1">
-                    <Form onSubmit={this.handleSubmit}>
-				        <FormItem
-				          {...formItemLayout}
-				          label="姓名"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="性别"
-				        >
-				          {getFieldDecorator('radio-group')(
-				            <RadioGroup>
-				              <Radio value="a">男</Radio>
-				              <Radio value="b">女</Radio>
-				            </RadioGroup>
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="年龄"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="学校"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="专业"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				         <FormItem
-				          {...formItemLayout}
-				          label="年级"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="邮箱"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('email', {
-				            rules: [{
-					              type: 'email', message: '邮箱格式如***@**.com/cn!',
-					            },{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				         <FormItem
-				          {...formItemLayout}
-				          label="手机号"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				       </Form>
-			      </div>
-			   </QueueAnim>
-		)
-	}
-}
 
 
-/*证件上传*/
-const fileList = [{
-	uid: -1,
-	name: 'xxx.png',
-	status: 'done',
-	url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-	thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-}];
-class UserImg extends React.Component {
-	render() {
-		const props = {
-			action: '//jsonplaceholder.typicode.com/posts/',
-			listType: 'picture',
-			defaultFileList: [...fileList],
-		};
-		return (
-			<QueueAnim type="bottom">
-			      <h2 style={{textAlign:'center',marginBottom:15}}>上传证件</h2>
-                  <Alert style={{marginBottom:15}} description="请将证件原件、核验单原件清晰拍照或彩色扫描后上传，图片文件后缀支持jpg、png、jpeg格式，上传图片大小建议在4M一下。" type="warning" />
-			      <div key="1">
-                      <Form>
-				        <FormItem
-				          {...formItemLayout}
-				          label="学生证"
-				          hasFeedback
-				        >
-                         <Upload {...props}>
-					      <Button>
-					        <Icon type="upload" /> 上传复印件
-					      </Button>
-					    </Upload>
-				       </FormItem>
-				       <FormItem
-				          {...formItemLayout}
-				          label="身份证"
-				          hasFeedback
-				        >
-                         <Upload {...props}>
-					      <Button>
-					        <Icon type="upload" /> 上传复印件
-					      </Button>
-					    </Upload>
-				       </FormItem>
-				       <FormItem
-				          {...formItemLayout}
-				          label="银行卡"
-				          hasFeedback
-				        >
-                         <Upload {...props}>
-					      <Button>
-					        <Icon type="upload" /> 上传复印件
-					      </Button>
-					    </Upload>
-				       </FormItem>
-				      </Form>
-			      </div>
-			</QueueAnim>
-		)
-	}
-}
 
-/*银行卡验证*/
-class BankVerification extends React.Component {
-	handleSubmit = (e) => {
-		e.preventDefault();
-		this.props.form.validateFieldsAndScroll((err, values) => {
-			if (!err) {
-				console.log('Received values of form: ', values);
-			}
-		});
-	}
-	render() {
-		const {
-			getFieldDecorator
-		} = this.props.form;
-		return (
-			<QueueAnim type="bottom">
-			      <h2 style={{textAlign:'center',marginBottom:15}}>银行卡验证</h2>
-                  <Alert style={{marginBottom:15}} description="用于补贴发放、转账资金，需持本人有效银行卡提供" type="warning" />
-			      <div key="1">
-                      <Form onSubmit={this.handleSubmit}>
-				         <FormItem
-				          {...formItemLayout}
-				          label="银行名称"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="银行卡号"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				         <FormItem
-				          {...formItemLayout}
-				          label="确认卡号"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input />
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="手机号"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input addonAfter={<div style={{cursor:'pointer'}}>发送验证码</div>}/>
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="验证码"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('user', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input/>
-				          )}
-				        </FormItem>
-				      </Form>
-			      </div>
-			</QueueAnim>
-		)
-	}
-}
-
-
-const Usernameform = Form.create()(UserName)
-const BankVerificationform = Form.create()(BankVerification)
-const steps = [{
-	title: '基本信息',
-	content: <Usernameform/>,
-}, {
-	title: '证件信息',
-	content: <UserImg/>,
-}, {
-	title: '银行账户信息',
-	content: <BankVerificationform/>
-}];
-
-export default class Register extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			current: 0,
-		};
+class RegisterIndex extends React.Component {
+	state = {
+		confirmDirty: false,
+		userType: this.props.params.status,
 	}
 	componentWillUnmount() {
 		window.scrollTo(0, 0);
 	}
-	next() {
-		const current = this.state.current + 1;
+	handleConfirmBlur = (e) => {
+		const value = e.target.value;
 		this.setState({
-			current
+			confirmDirty: this.state.confirmDirty || !!value
 		});
 	}
-	prev() {
-		const current = this.state.current - 1;
-		this.setState({
-			current
+	checkPassword = (rule, value, callback) => {
+		const form = this.props.form;
+		if (value && value !== form.getFieldValue('password')) {
+			callback('两次密码不一致!');
+		} else {
+			callback();
+		}
+	}
+	checkConfirm = (rule, value, callback) => {
+		const form = this.props.form;
+		if (value && this.state.confirmDirty) {
+			form.validateFields(['confirm'], {
+				force: true
+			});
+		}
+		callback();
+	}
+	handleSubmit = (e) => {
+		e.preventDefault();
+		this.props.form.validateFields((err, values) => {
+			if (!err) {
+				// console.log('Received values of form: ', values);
+			}
+			/*请求登录*/
+			this.props.dispatch({
+				type: 'LoginUser/UserReigst',
+				payload: {
+					username: values.username,
+					password: values.password,
+					userType: this.state.userType
+				}
+			})
 		});
+	}
+	handleUser = (e) => {
+		let values = e.target.value;
+		this.props.dispatch({
+			type: 'LoginUser/Usercheck',
+			payload: {
+				username: values,
+				userType: this.state.userType
+			}
+		})
+	}
+	callback() {
+		this.props.form.resetFields()
 	}
 	render() {
 		const {
 			current
-		} = this.state;
+		} = this.props.LoginUser;
+		const {
+			getFieldDecorator
+		} = this.props.form;
+		const {
+			userType
+		} = this.state
+		console.log(userType)
 		return (
-			<div className={styles.LoginContent} style={{width:800,backgroundSize:'30%'}}>
+			<div>
+			   <div className={styles.LoginTop}>
+	           <div className={styles.LoginTitle}>
+	             <Link to='/'>
+	             <h1>LOGO</h1>
+	             <h1>湖北大学生实习实训网</h1>
+	             <h3>全省统一大学生实习实训公共服务网络平台</h3>
+	             </Link>
+	           </div>
+	        </div>
+			<div className={styles.LoginContent} style={{width:730,backgroundSize:'26%',paddingRight:230}}>
 			<Row>
             <Col span={24}>
               <div className={styles.LoginForm} style={{paddingRight:0}}>
                 <Row>
                   <Col span={8}>
                     <div className={styles.ResigBottom}>
-			          <Button onClick={()=>this.props.ChangeStatus()}>已有账号？登录</Button>
+                    {(()=>{
+                    	switch(userType){
+                    		case '1':return <Button><Link to='/login/1'>已有账号？学生登录</Link></Button>
+                    		case '2':return <Button><Link to='/login/2'>已有账号？企业登录</Link></Button>
+                    		default:return <div>页面错误</div>
+                    	}
+                    })()
+			          
+                    }
 			        </div>
-                     <Steps current={current} direction="vertical" >
-			          {steps.map(item => <Step key={item.title} title={item.title} />)}
-			        </Steps>
                   </Col>
                   <Col span={16}>
-                    <div className="steps-content">{steps[this.state.current].content}</div>
+                    <div className="steps-content">
+                    <h2 style={{textAlign:'center',marginBottom:30}}>快速注册，抢先一步</h2>
+                    <Form>
+				        <FormItem
+				          {...formItemLayout}
+				          label="账户名"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('username', {
+				            rules: [{
+				              required: true, message: '不能为空!',
+				            }],
+				          })(
+				            <Input placeholder="请输入账户名" onBlur={(e)=>this.handleUser(e)}/>
+				          )}
+				        </FormItem>
+				        <FormItem
+				          {...formItemLayout}
+				          label="密码"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('password', {
+				            rules: [{
+				              required: true, message: '不能为空!',
+				            }, {
+				              validator: this.checkConfirm,
+				            }],
+				          })(
+				            <Input type='password' placeholder="请输入密码"/>
+				          )}
+				        </FormItem>
+				        <FormItem
+				          {...formItemLayout}
+				          label="确认密码"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('confirm', {
+				            rules: [{
+				              required: true, message: '确认密码不能为空!',
+				            }, {
+				              validator: this.checkPassword,
+				            }],
+				          })(
+				            <Input type="password" onBlur={(e)=>this.handleConfirmBlur(e)} />
+				          )}
+				        </FormItem>
+				        <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
+				         <Button type="primary" size='large' onClick={(e)=>this.handleSubmit(e)}>立即注册</Button>
+				         <Button style={{marginLeft:15}} size='large' onClick={()=>this.callback()}>重置</Button>
+				        </FormItem>
+				       </Form>
+                    </div>
                   </Col>
-                </Row>
-                <Row style={{clear:'both'}}>
-                 <Col span={16} push={8}>
-                 <div className="steps-action">
-		          {
-		            this.state.current < steps.length - 0 && this.state.current !=2
-		            &&
-		            <Button type="primary" size='large' onClick={() => this.next()}>保存，下一步</Button>
-		          }
-		          {
-			       this.state.current == 2
-		            &&
-		            <Button type="primary" size='large'>开始注册</Button>
-		          }
-		          {
-		            this.state.current > 0
-		            &&
-		            <Button style={{ marginLeft:10 }} size='large' onClick={() => this.prev()}>
-		              返回上一步
-		            </Button>
-		          }
-		        </div>
-                </Col>
-                <Col span={8} pull={16}></Col>
                 </Row>
               </div>  
             </Col>
           </Row>
           </div>
+       </div>
 		)
 	}
 }
+
+
+function mapStateToProps(props) {
+	return {
+		LoginUser: props.LoginUser,
+		loading: props.loading.global,
+	};
+}
+
+/*建立数据关联关系*/
+export default connect(mapStateToProps)(Form.create()(RegisterIndex));

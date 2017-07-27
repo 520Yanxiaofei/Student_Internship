@@ -97,7 +97,7 @@ const Menulist = React.createClass({
       //   })
     }
   },
-  componentWillReceiveProps: function(nextProps) {},
+  // componentWillReceiveProps: function(nextProps) {},
   render() {
     const collapse = !this.state.collapse;
     return (

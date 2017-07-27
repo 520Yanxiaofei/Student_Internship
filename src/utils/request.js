@@ -3,7 +3,9 @@ import {
   message,
 } from 'antd';
 import cookie from 'react-cookie';
-import GUARD_URL from './URL';
+import {
+  HTTP_URL
+} from './URL';
 import {
   hashHistory
 } from 'dva/router';
@@ -41,12 +43,12 @@ function parseDATA(response) {
 
 export default function request(url, options) {
   let Token = cookie.load('userdata');
-  return fetch(GUARD_URL + url, {
+  return fetch(HTTP_URL + url, {
       //return fetch(`http://192.168.28.233:8080` + url, {
       method: options.method,
       headers: {
         "Content-Type": "application/json",
-        "sid": Token ? Token.sid + " " : ''
+        //"sid": Token ? Token.sid + " " : ''
       },
       body: JSON.stringify(options.body)
     })
@@ -54,7 +56,7 @@ export default function request(url, options) {
     .then(parseJSON)
     .then(parseDATA)
     .catch((err) => {
-      // message.warning(`服务器异常！请稍后再试...`);
-      location.hash = '#/reminder'
+      message.warning(`服务器异常！请稍后再试...`);
+      // location.hash = '#/reminder'
     })
 }

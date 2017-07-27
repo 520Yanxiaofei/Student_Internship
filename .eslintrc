@@ -1,4 +1,14 @@
 {
+  "plugins": [
+        "html",
+        "react"
+    ],
+    "env": {
+        "node": true,
+        "jquery": true,
+        "es6": true,
+        "browser": true
+    },
   "extends": "airbnb",
   "rules": {
     "semi": [2, "never"],

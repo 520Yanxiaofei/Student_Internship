@@ -3,6 +3,9 @@ import React, {
 	PropTypes
 } from 'react';
 import {
+	connect
+} from 'dva';
+import {
 	Link,
 } from 'react-router';
 import {
@@ -59,6 +62,15 @@ class StationAdd extends React.Component {
 			if (!err) {
 				console.log('Received values of form: ', values);
 			}
+			if (!values.station_tag) return null;
+			this.props.dispatch({
+				type: 'StationManage/StationAdd',
+				payload: {
+					...values,
+					station_tag: values.station_tag.join(','),
+					htmlBody: this.state.html
+				}
+			})
 		});
 	}
 	componentWillUnmount() {
@@ -70,6 +82,10 @@ class StationAdd extends React.Component {
 		})
 	}
 	render() {
+		const {
+			loading
+		} = this.props.StationManage;
+		console.log(loading)
 		const {
 			getFieldDecorator
 		} = this.props.form;
@@ -111,7 +127,7 @@ class StationAdd extends React.Component {
 					          label="岗位名称"
 					          hasFeedback
 					        >
-					          {getFieldDecorator('station', {
+					          {getFieldDecorator('station_name', {
 					            rules: [{
 					              required: true, message: '岗位名称不能为空!',
 					            }],
@@ -124,7 +140,7 @@ class StationAdd extends React.Component {
 					          label="岗位行业"
 					          hasFeedback
 					        >
-					          {getFieldDecorator('category', {
+					          {getFieldDecorator('station_category', {
 					            rules: [{
 					              required: true, message: '岗位行业不能为空!',
 					            }],
@@ -137,7 +153,7 @@ class StationAdd extends React.Component {
 					          label="岗位标签"
 					          hasFeedback
 					        >
-					          {getFieldDecorator('tag', {
+					          {getFieldDecorator('station_tag', {
 					            rules: [{
 					              required: true, message: '岗位标签不能为空!',
 					            }],
@@ -160,7 +176,7 @@ class StationAdd extends React.Component {
 						      <Edit editorContent={(html)=>this.editValue(html)}/>
 					        </FormItem>
 					        <FormItem wrapperCol={{ span: 10, offset: 2 }}>
-					          <Button onClick={()=>this.onchangeDemo()}>预览效果</Button>&nbsp;&nbsp;<Button type="primary" htmlType="submit">提交发布</Button>
+					          <Button onClick={()=>this.onchangeDemo()}>预览效果</Button>&nbsp;&nbsp;<Button type="primary" htmlType="submit" loading={loading}>提交发布</Button>
 					        </FormItem>
 					    </Form>
 				     </Col>
@@ -173,4 +189,11 @@ class StationAdd extends React.Component {
 	}
 }
 
-export default Form.create()(StationAdd)
+function mapStateToProps(props) {
+	return {
+		StationManage: props.StationManage,
+	};
+}
+
+/*建立数据关联关系*/
+export default connect(mapStateToProps)(Form.create()(StationAdd));

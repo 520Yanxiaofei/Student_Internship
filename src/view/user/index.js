@@ -177,7 +177,10 @@ class UserIndex extends React.Component {
 		/*意外清除cookie是否登录*/
 	componentDidMount() {
 		this.props.dispatch({
-			type: 'LoginUser/UserIf',
+			type: 'LoginUser/Userinfo',
+		})
+		this.props.dispatch({
+			type: 'PersonalCenter/UserPersonal',
 		})
 	}
 	componentWillUnmount() {
@@ -193,6 +196,7 @@ class UserIndex extends React.Component {
 		const {
 			TabCurrent
 		} = this.state;
+		// console.log(this)
 		return (
 			<div>
 			  <div className={styles.UserContentAuto}>
@@ -240,6 +244,7 @@ class UserIndex extends React.Component {
 function mapStateToProps(props) {
 	return {
 		LoginUser: props.LoginUser,
+		PersonalCenter: props.PersonalCenter
 	};
 }
 

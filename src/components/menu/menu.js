@@ -3,7 +3,8 @@ import React, {
 } from 'react';
 import {
   Link
-} from 'dva/router';
+}
+from 'dva/router';
 import {
   Menu,
   Icon,
@@ -129,7 +130,7 @@ const Menulist = React.createClass({
          {/* <div className="ant-aside-action" onClick={this.onCollapseChange}>
             {collapse ? <Icon type="right" /> : <Icon type="left" />}
           </div>*/}
-			  <BackTop visibilityHeight={200}/>
+        <BackTop visibilityHeight={200}/>
         </div>
     )
   }

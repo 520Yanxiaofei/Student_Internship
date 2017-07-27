@@ -18,8 +18,12 @@ const IndexMain = React.createClass({
   componentDidMount: function() {
     const SeesionColor = sessionStorage.getItem('ThemColor')
     this.onChangthem(SeesionColor)
+      // this.props.dispatch({
+      //   type: 'LoginUser/UserCookie'
+      // })
+      // console.log(this)
     this.props.dispatch({
-      type: 'LoginUser/UserCookie'
+      type: 'LoginUser/Userinfo'
     })
   },
   onChangthem: function(color) {

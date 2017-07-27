@@ -60,13 +60,27 @@ const Routers = function({
 					cb(null, require('./view/user/'))
 				}, 'user_index')
 			},
-		}, ],
+		}, {
+			path: 'reminder',
+			getComponent(nextState, cb) {
+				require.ensure([], require => {
+					cb(null, require('./view/404/Reminder'))
+				}, 'reminder')
+			},
+		}],
 	}, {
-		path: '/login_index/:status',
+		path: '/login/:status',
 		getComponent(nextState, cb) {
 			require.ensure([], require => {
-				cb(null, require('./view/login/login_index'))
-			}, 'login_index')
+				cb(null, require('./view/login/login'))
+			}, 'login')
+		},
+	}, {
+		path: '/register/:status',
+		getComponent(nextState, cb) {
+			require.ensure([], require => {
+				cb(null, require('./view/login/register'))
+			}, 'register')
 		},
 	}];
 

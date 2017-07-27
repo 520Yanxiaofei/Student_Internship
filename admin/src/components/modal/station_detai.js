@@ -17,12 +17,11 @@ const StationDetai = ({
 	return (
 		<div>
         <Modal
-          title="岗位详情"
+          title="岗位描述"
           visible={visible}
           onOk={handleOk}
           onCancel={handleCancel}
         >
-          <div>{DetaiData.title}</div>
           <div dangerouslySetInnerHTML={{__html:DetaiData.htmlBody}}>
           </div>
         </Modal>

@@ -1,0 +1,103 @@
+api doc : http://www.hbsrcfwj.cn/api2/swagger-ui.html
+
+测试工具：
+curl
+http://www.test-cors.org/
+idea rest client plugin
+
+调用方法：
+
+一、登录注册
+1、验证码：Get /api2/captcha/
+示例：curl -XGET http://www.hbsrcfwj.cn/api2/captcha/
+
+2、登录； Post /api2/user/login?username=&password=[&userType=] ([]内为可选擦参数）
+  userType 个人用户：1，企业用户：2，管理用户：0
+示例：curl -XPOST http://www.hbsrcfwj.cn/api2/user/login -d "username=wxhb" -d "password=abc" [-d "userType=1"] ([]内为可选擦参数）
+
+4、获取当前登录用户信息 Get /api2/user/info
+示例：curl -XGET  http://www.hbsrcfwj.cn/api2/user/info
+
+5、退出登录 Get /api2/user/logout
+示例：curl -XPOST  http://www.hbsrcfwj.cn/api2/user/logout
+
+以下api除get方式以外，全部通过requestBody提交，content-type='application/json'
+
+3、修改密码：Post /api2/user/updatePwd (提交参数：old，new）
+示例:curl -XPOST  http://www.hbsrcfwj.cn/api2/user/updatePwd -H 'Content-Type:application/json' -d "{
+  'old':'wxhb,
+  'new':'newpwd'
+}"
+
+4、用户名检测：Post /api2/user/check （提交参数：username，userType）
+示例:curl -XPOST  http://www.hbsrcfwj.cn/api2/user/check -H 'Content-Type:application/json' -d "{
+  'username':wxhb,
+  'userType':'1'
+}"
+
+5、用户注册：Post /api2/user/reg （提交参数：username，password,phone,userType）
+示例:curl -XPOST  http://www.hbsrcfwj.cn/api2/user/reg -H 'Content-Type:application/json' -d "{
+     'username':wxhb,
+     'password':'abc',
+     'userType':'1'
+   }"
+
+二、文件图片上传
+6、文件上传：Post /api2/file(提交参数：file)
+示例：curl -XPOST  http://www.hbsrcfwj.cn/api2/file -F file=@path/to/local/file’
+8、下载文件：Get  /api2/file/{fileId}
+示例：curl -XGET  http://www.hbsrcfwj.cn/api2/file/1212121212123
+9、删除上传文件：DELETE /api2/file/{fileId}
+示例：curl -XDELETE http://www.hbsrcfwj.cn/api2/file/1212121212123
+
+三、业务数据操作
+moduleId对应关系:
+学生：applier
+用人单位：employer
+职位：post
+
+10、数据保存 Post /api2/biz/{moduleId}/add
+提交数据中如果有id，则自动执行更新操作，没有id，就执行新建操作
+示例：curl -XPOST  http://www.hbsrcfwj.cn/api2/biz/applier/add -H 'Content-Type:application/json' -d "{
+  'field1':123,
+  'field2':'abc',
+  'field3':true,
+  'field4':'2017-07-26'
+}"
+
+11、单条数据查询 Get  /api2/biz/{moduleId}/{id}
+示例：curl -XGET  http://www.hbsrcfwj.cn/api2/biz/applier/5978192cf1c2320f341a9be9
+
+12、多条数据分页条件查询 Put /api2/biz/{moduleId}/list
+示例：curl -XPUT  http://www.hbsrcfwj.cn/api2/biz/applier/list -H 'Content-Type:application/json' -d "{
+  'q':{'field1'='123','field2'>3},
+  'size':'5',
+  'page':2,
+  'field':'field1,field2',
+  'sort':'field1,-field2',
+}"
+
+13、删除单条数据 Delete /api2/biz/{moduleId}/{id}
+示例：curl -XDELETE  http://www.hbsrcfwj.cn/api2/biz/applier/5978192cf1c2320f341a9be9
+
+14、批量删除 Put /api2/biz/{moduleId}/delete
+示例：curl -XPUT  http://www.hbsrcfwj.cn/api2/biz/applier/delete -H 'Content-Type:application/json' -d "{
+   'q':{'field1'='123','field2'>3}
+ }"
+
+
+四、短信接口
+15、发送短信 Post /api2/sms/
+示例：curl -XPOST  http://www.hbsrcfwj.cn/api2/sms/ -H 'Content-Type:application/json' -d "{
+   'phone':'13901234567',
+   'content':'测试短信abc123'
+}"
+16、发送验证码 Post /api2/sms/vcode
+示例：curl -XPOST  http://www.hbsrcfwj.cn/api2/sms/vcode -H 'Content-Type:application/json' -d "{
+   'phone':'13908632945'
+}"
+
+
+
+
+

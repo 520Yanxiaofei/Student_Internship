@@ -17,6 +17,11 @@ export default class Header extends React.Component {
 			UserStatus: cookie.load('DemoUser')
 		})
 	}
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			UserStatus: cookie.load('DemoUser')
+		})
+	}
 	render() {
 		const {
 			UserStatus
@@ -33,16 +38,15 @@ export default class Header extends React.Component {
 			    </div>
 			    <div className={styles.HeaderUser}>
 			          {
-			          	UserStatus && UserStatus.username != '' && UserStatus.password != ''?
-			          	<div className={styles.HeaderUserOk}>欢迎你，{UserStatus.username}<span><Link to="/user_index">个人中心</Link></span>&nbsp;<span onClick={()=>this.ChangeOut()}>退出</span></div>
+			          	  UserStatus && UserStatus.userName != ''?
+			          	<div className={styles.HeaderUserOk}>欢迎你，{UserStatus.userName}<span><Link to="/user_index">个人中心</Link></span>&nbsp;<span onClick={()=>this.ChangeOut()}>退出</span></div>
 			          	:
 			          	<div className={styles.HeaderLogin}>
-			          	<span><Link to="/login_index/login">登录</Link></span>
-			          	<span><Link to="/login_index/register">注册</Link></span>
-			          	<span><Link to="/login_index/company">企业入驻</Link></span>
+			          	<span><Link to="/login/1">登录</Link></span>
+			          	<span><Link to="/register/1">注册</Link></span>
+			          	<span><Link to="/register/2">企业入驻</Link></span>
 			          	</div>
 			          }
-				      
 			    </div>
 			  </div>
 			</div>

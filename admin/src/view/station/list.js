@@ -3,6 +3,9 @@ import React, {
 	PropTypes
 } from 'react';
 import {
+	connect
+} from 'dva';
+import {
 	Link,
 } from 'react-router';
 import {
@@ -33,19 +36,24 @@ const columnsNetdata = [{
 	}
 }, {
 	title: '岗位名称',
-	dataIndex: 'task_pid',
-	key: 'task_pid',
+	dataIndex: 'station_name',
+	key: 'station_name',
 	width: '20%'
 }, {
 	title: '岗位分类',
-	dataIndex: 'task_name',
-	key: 'task_name',
+	dataIndex: 'station_category',
+	key: 'station_category',
 	width: '20%'
 }, {
 	title: '岗位标签',
-	dataIndex: 'task_protocol',
-	key: 'task_protocol',
-	width: '20%'
+	dataIndex: 'station_tag',
+	key: 'station_tag',
+	width: '20%',
+	render: (text) => {
+		return (
+			<span>{text.split(',')}</span>
+		)
+	}
 }, {
 	title: '发布日期',
 	dataIndex: 'task_ip',
@@ -62,73 +70,21 @@ const columnsNetdata = [{
 	}
 }];
 
-const Networkdata = [{
-	key: 1,
-	target_ip: "",
-	target_port: "-",
-	task_ip: "TCP",
-	task_name: "数据库",
-	task_pid: "应用进程",
-	task_port: "3306",
-	task_protocol: "mysql",
-	task_status: "1"
-}, {
-	key: 2,
-	target_ip: "",
-	target_port: "-",
-	task_ip: "TCP",
-	task_name: "WEB服务器",
-	task_pid: "应用进程",
-	task_port: "80",
-	task_protocol: "IIS",
-	task_status: "1"
-}, {
-	key: 3,
-	target_ip: "",
-	target_port: "-",
-	task_ip: "TCP",
-	task_name: "RPC",
-	task_pid: "系统进程",
-	task_port: "135",
-	task_protocol: "svchost",
-	task_status: "1"
-}, {
-	key: 4,
-	target_ip: "",
-	target_port: "-",
-	task_ip: "TCP",
-	task_name: "RPC",
-	task_pid: "系统进程",
-	task_port: "135",
-	task_protocol: "svchost",
-	task_status: "1"
-}, {
-	key: 5,
-	target_ip: "",
-	target_port: "-",
-	task_ip: "TCP",
-	task_name: "RPC",
-	task_pid: "系统进程",
-	task_port: "135",
-	task_protocol: "svchost",
-	task_status: "1"
-}];
 class StationList extends React.Component {
 	state = {
 		selectedRowKeys: [], // Check here to configure the default column
-		loading: false,
 	}
 	start = () => {
-		this.setState({
-			loading: true
-		});
-		// ajax request after empty completing
-		setTimeout(() => {
-			this.setState({
-				selectedRowKeys: [],
-				loading: false,
-			});
-		}, 1000);
+
+	}
+	componentDidMount() {
+		this.props.dispatch({
+			type: 'StationManage/StationList',
+			payload: {
+				size: 10,
+				page: 1
+			}
+		})
 	}
 	componentWillUnmount() {
 		window.scrollTo(0, 0);
@@ -149,9 +105,12 @@ class StationList extends React.Component {
             </Col>
 		);
 		const {
-			loading,
 			selectedRowKeys
 		} = this.state;
+		const {
+			StationListData,
+			loading
+		} = this.props.StationManage
 		const rowSelection = {
 			selectedRowKeys,
 			onChange: this.onSelectChange,
@@ -177,11 +136,19 @@ class StationList extends React.Component {
 			            {hasSelected ? `已选择 ${selectedRowKeys.length} 个岗位` : ''}
 			          </span>
 					    </div>
-					    <Table rowSelection={rowSelection} columns={columnsNetdata} loading={false} pagination={true} dataSource={Networkdata}/>
+					    <Table loading={loading} rowSelection={rowSelection} columns={columnsNetdata} loading={false} pagination={true} dataSource={StationListData.list}/>
 					</Row>
 				</QueueAnim>
 			</div>
 		);
 	}
 }
-export default StationList
+
+function mapStateToProps(props) {
+	return {
+		StationManage: props.StationManage,
+	};
+}
+
+/*建立数据关联关系*/
+export default connect(mapStateToProps)(StationList);

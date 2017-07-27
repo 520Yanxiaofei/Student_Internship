@@ -3,6 +3,9 @@ import {
   connect
 } from 'dva';
 import {
+  Link
+} from 'dva/router';
+import {
   Spin,
   Icon,
   message,
@@ -11,23 +14,23 @@ import {
   Button,
   Row,
   Col,
-  Tabs
 } from 'antd';
-import {
-  Link
-} from 'dva/router';
 import styles from './index.less';
-const TabPane = Tabs.TabPane;
+import Footer from '../../components/footer/footer';
 const FormItem = Form.Item;
-
-
-/*登陆板块*/
-function callback(key) {
-  console.log(key);
-}
-class Login extends React.Component {
+class LoginIndex extends React.Component {
+  state = {
+    userType: this.props.params.status,
+  }
   componentWillUnmount() {
     window.scrollTo(0, 0);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps) {
+      this.setState({
+        userType: nextProps.params.status
+      })
+    }
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -40,10 +43,16 @@ class Login extends React.Component {
         type: 'LoginUser/Userlogin',
         payload: {
           ...values,
+          userType: this.state.userType
         }
       })
     });
   }
+
+  callback() {
+    this.props.form.resetFields()
+  }
+
   render() {
     const {
       getFieldDecorator
@@ -51,27 +60,42 @@ class Login extends React.Component {
     const {
       loading
     } = this.props.LoginUser
+    const {
+      userType
+    } = this.state
     return (
-      <div className={styles.LoginContent}>
-      <Row>
+      <div>
+	        <div className={styles.LoginTop}>
+	           <div className={styles.LoginTitle}>
+	             <Link to='/'>
+	             <h1>LOGO</h1>
+	             <h1>湖北大学生实习实训网</h1>
+	             <h3>全省统一大学生实习实训公共服务网络平台</h3>
+	             </Link>
+	           </div>
+	        </div>
+	         <div className={styles.LoginContent}>
+             <Row>
             <Col span={24}>
               <div className={styles.LoginForm}>
-                <Tabs defaultActiveKey="1" onChange={callback}>
-                  <TabPane tab="学生登录" key="1">
+                     <ul className={styles.LoginTabsele}>
+                       <li className={userType=='1'?styles.Loginactive:null}><Link to='/login/1'>学生登录</Link></li>
+                       <li className={userType=='2'?styles.Loginactive:null}><Link to='/login/2'>企业登录</Link></li>
+                     </ul>
                      <img className={styles.LoginUserimg} src="img/login_user.png"/>
                      <Form onSubmit={this.handleSubmit} className="login-form">
                         <FormItem hasFeedback>
                           {getFieldDecorator('username', {
                             rules: [{ required: true, message: '请输入手机号或者账号!' }],
                           })(
-                            <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="请输入手机号或者账号" />
+                            <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="请输入手机号或者账号" autoComplete="off"/>
                           )}
                         </FormItem>
                         <FormItem hasFeedback>
                           {getFieldDecorator('password', {
                             rules: [{ required: true, message: '请输入密码!' }],
                           })(
-                            <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="请输入密码" />
+                            <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="请输入密码" autoComplete="off"/>
                           )}
                         </FormItem>
                         <FormItem>
@@ -80,54 +104,32 @@ class Login extends React.Component {
                           </Button>
                         </FormItem>
                         <FormItem style={{marginBottom:0}}>
-                          <Button size='large' className="login-form-buttonDe" onClick={()=>this.props.ChangeStatus()}>
-                            还没有注册？
+                          <Button size='large' className="login-form-buttonDe">
+                            {(()=>{
+                              switch(userType){
+                                case '1':return <Link to='/register/1'>还没有账号</Link>
+                                case '2':return <Link to='/register/2'>还没有账号？企业注册</Link>
+                                default:return <div>页面错误</div>
+                              }
+                            })()}
                           </Button>
                         </FormItem>
                       </Form>
-                  </TabPane>
-                  <TabPane tab="企业登录" key="2">
-                      <Form onSubmit={this.handleSubmit} className="login-form" style={{height:312}}>
-                        <FormItem hasFeedback>
-                          {getFieldDecorator('username', {
-                            rules: [{ required: true, message: '请输入手机号或者账号!' }],
-                          })(
-                            <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="请输入手机号或者账号" />
-                          )}
-                        </FormItem>
-                        <FormItem hasFeedback>
-                          {getFieldDecorator('password', {
-                            rules: [{ required: true, message: '请输入密码!' }],
-                          })(
-                            <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="请输入密码" />
-                          )}
-                        </FormItem>
-                        <FormItem>
-                          <Button type="primary"  htmlType="submit" size='large' className="login-form-button">
-                            登录后台
-                          </Button>
-                        </FormItem>
-                        <FormItem style={{marginBottom:0}}>
-                          <Button size='large' className="login-form-buttonDe" onClick={()=>this.props.ChangeCompany()}>
-                            还没有入驻？
-                          </Button>
-                        </FormItem>
-                      </Form>
-                  </TabPane>
-                </Tabs>
               </div>  
             </Col>
           </Row>
+          </div>
+	        <Footer footerBj='default'/>
           </div>
     )
   }
 }
 
-function mapStateToProps(LoginUser) {
+function mapStateToProps(props) {
   return {
-    ...LoginUser,
+    LoginUser: props.LoginUser,
   };
 }
 
 /*建立数据关联关系*/
-export default connect(mapStateToProps)(Form.create()(Login));
+export default connect(mapStateToProps)(Form.create()(LoginIndex));

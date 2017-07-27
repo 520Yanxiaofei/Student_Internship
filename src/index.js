@@ -11,11 +11,13 @@ import {
 import {
 	createHashHistory
 } from 'history';
-// import createLoading from 'dva-loading'
+import createLoading from 'dva-loading'
 
 // 1. Initialize
 const app = dva({
-	// ...createLoading(),
+	...createLoading({
+		effects: true,
+	}),
 	/*抛出错误异常*/
 	onError(e) {
 		// console.log(e)
@@ -31,9 +33,12 @@ const app = dva({
 //app.use({});
 
 // 3. Model
-//主机信息
+//登录
 app.model(require('./models/login/login'));
-
+/*岗位展示*/
+app.model(require('./models/station/'));
+/*学生信息*/
+app.model(require('./models/personal/'));
 // 4. Router
 app.router(require('./router'));
 

@@ -3,6 +3,9 @@ import React, {
 	PropTypes
 } from 'react';
 import {
+	connect
+} from 'dva';
+import {
 	Link,
 } from 'react-router';
 import {
@@ -20,8 +23,9 @@ import QueueAnim from 'rc-queue-anim';
 import styles from './situation.less';
 import Localhostd from '../../components/public/localhost';
 import SituationCountup from './countup';
-const Index1 = React.createClass({
-			render() {
+
+class Statistical extends React.Component {
+		render() {
 				const content = (
 					<Col span={12}>
                   <Breadcrumb>
@@ -132,7 +136,16 @@ const Index1 = React.createClass({
 							  </Row>
 							  </QueueAnim>
 						< /div>
-		);
-	},
-})
-export default Index1
+		)
+	}
+}
+
+
+function mapStateToProps(props) {
+	return {
+		StationManage: props.StationManage,
+	};
+}
+
+/*建立数据关联关系*/
+export default connect(mapStateToProps)(Statistical);

@@ -41,7 +41,7 @@ const formItemLayout = {
 	},
 };
 /*基本信息*/
-class Company extends React.Component {
+class Personal extends React.Component {
 	handleSubmit = () => {
 		// e.preventDefault();
 		this.props.form.validateFieldsAndScroll((err, values) => {
@@ -141,7 +141,7 @@ class Company extends React.Component {
 }
 
 const Companyform = Form.create()(Company)
-class RegisterCompany extends React.Component {
+class RegisterPersonl extends React.Component {
 	componentWillUnmount() {
 		window.scrollTo(0, 0);
 	}
@@ -178,7 +178,9 @@ class RegisterCompany extends React.Component {
 			          <Button onClick={()=>this.props.ChangeStatus()}>已有账号？登录</Button>
 			        </div>
 			        </Col>
-                 <Col span={18}><Companyform {...UserRegist}/></Col>
+                 <Col span={18}>
+                 <Personal {...UserRegist}/>
+                 </Col>
                 </Row>
               </div>  
             </Col>
@@ -196,4 +198,4 @@ function mapStateToProps(props) {
 }
 
 /*建立数据关联关系*/
-export default connect(mapStateToProps)(RegisterCompany);
+export default connect(mapStateToProps)(RegisterPersonl);

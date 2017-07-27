@@ -11,6 +11,13 @@ import cookie from 'react-cookie';
 import NProgress from 'nprogress'
 
 class Index extends React.Component {
+
+  componentDidMount() {
+    // console.log(this)
+    // this.props.dispatch({
+    //   type: 'LoginUser/Userinfo'
+    // })
+  }
   render() {
     return (
       <div>

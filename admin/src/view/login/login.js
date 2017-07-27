@@ -32,6 +32,7 @@ const Login = React.createClass({
         type: 'LoginUser/Userlogin',
         payload: {
           ...values,
+          userType: '2'
         }
       })
     });
@@ -102,18 +103,12 @@ const Login = React.createClass({
 })
 
 
-function mapStateToProps(LoginUser) {
+function mapStateToProps(props) {
   return {
-    ...LoginUser,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
+    LoginUser: props.LoginUser,
   };
 }
 
 const LoginUser = Form.create()(Login)
   /*建立数据关联关系*/
-export default connect(mapStateToProps, mapDispatchToProps)(LoginUser);
+export default connect(mapStateToProps)(LoginUser);

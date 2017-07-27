@@ -18,6 +18,8 @@ const app = dva({
 
 // 3. Model
 app.model(require('./models/login/login'));
+/*岗位管理*/
+app.model(require('./models/station/'));
 
 // 4. Router
 app.router(require('./router'));

@@ -75,7 +75,8 @@
 		margin-left:80px;
 		height:32px;
 	}
-	.steps-action .ant-btn-primary{
+	.ant-form .ant-btn-primary{
+		height:32px;
 		background:@link-color;
 		border-color:@link-color;
 	}
@@ -85,4 +86,31 @@
 }
 .ResigBottom{
 	margin-bottom:15px;
+}
+
+.LoginTabsele{
+	height:50px;
+	line-height:50px;
+	margin-bottom:20px
+}
+.LoginTabsele li{
+	float:left;
+	width:50%;
+	text-align:center;
+	font-size:16px;
+	border-bottom:2px solid #eee;
+	cursor:pointer
+}
+.LoginTabsele li a{
+	color:@primary-color;
+	display:block
+}
+.LoginTabsele li.Loginactive{
+	color:@link-color;
+	border-bottom:2px solid @link-color;
+	text-decoration:none
+}
+.LoginTabsele li.Loginactive a{
+	color:@link-color;
+	text-decoration:none
 }

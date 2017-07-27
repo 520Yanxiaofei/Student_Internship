@@ -62,7 +62,7 @@ function renderOption(item) {
 /*搜索结果*/
 const columns = [{
 	title: '岗位名称',
-	dataIndex: 'name',
+	dataIndex: 'station_name',
 	width: '30%',
 	render: (text) => {
 		return (
@@ -71,15 +71,15 @@ const columns = [{
 	}
 }, {
 	title: '企业名称',
-	dataIndex: 'age',
+	dataIndex: '',
 	width: '30%',
 }, {
 	title: '城市',
-	dataIndex: 'address',
+	dataIndex: '',
 	width: '10%',
 }, {
 	title: '发布日期',
-	dataIndex: 'date',
+	dataIndex: '',
 	width: '10%',
 }, {
 	title: '操作',
@@ -102,7 +102,7 @@ for (let i = 0; i < 46; i++) {
 	});
 }
 
-export default class StationIndex extends React.Component {
+class StationIndex extends React.Component {
 	state = {
 		dataSource: [],
 	}
@@ -112,6 +112,15 @@ export default class StationIndex extends React.Component {
 			dataSource: value ? searchResult(value) : [],
 		});
 	}
+	componentDidMount() {
+		this.props.dispatch({
+			type: 'StationManage/StationList',
+			payload: {
+				size: 10,
+				page: 1
+			}
+		})
+	}
 	componentWillUnmount() {
 		window.scrollTo(0, 0);
 	}
@@ -119,6 +128,11 @@ export default class StationIndex extends React.Component {
 		const {
 			dataSource
 		} = this.state;
+		console.log(this)
+		const {
+			StationListData,
+			loading
+		} = this.props.StationManage
 		return (
 			<div>
       <div className={styles.StationCations}>
@@ -189,7 +203,7 @@ export default class StationIndex extends React.Component {
           <Col span={20}>
              <div className={styles.StationTag}>已选条件：<Tag color="orange" closable>宜昌市</Tag><Tag color="orange" closable>IT互联网</Tag><Tag color="orange" closable>前端工程师实习生</Tag></div>
              <div className={styles.StationTable}>
-                <Row><Col span={24}><Table  columns={columns} dataSource={data} /></Col></Row>
+                <Row><Col span={24}><Table  columns={columns} dataSource={StationListData.list} /></Col></Row>
              </div>
           </Col>
          </Row>
@@ -200,3 +214,12 @@ export default class StationIndex extends React.Component {
 	}
 
 }
+
+function mapStateToProps(props) {
+	return {
+		StationManage: props.StationManage,
+	};
+}
+
+/*建立数据关联关系*/
+export default connect(mapStateToProps)(StationIndex);
