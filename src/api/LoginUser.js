@@ -36,3 +36,11 @@ export async function Userout(params) {
 		body: params
 	});
 }
+
+/*验证码*/
+export async function UserCaptcha(params) {
+	return request(`/captcha/`, {
+		method: 'GET',
+		body: params
+	});
+}

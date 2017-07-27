@@ -15,12 +15,29 @@ import {
   Row,
   Col,
 } from 'antd';
+import cookie from 'react-cookie';
 import styles from './index.less';
 import Footer from '../../components/footer/footer';
+import {
+  HTTP_URL
+} from '../../utils/URL';
 const FormItem = Form.Item;
+
+const Code = cookie.load('CodeTimes');
+
 class LoginIndex extends React.Component {
   state = {
     userType: this.props.params.status,
+    codeImg:'',
+  }
+  componentDidMount(){
+    if(Code.Logincode>=3){
+      console.log(3333)
+      // this.props.dispatch({type:'LoginUser/UserCaptcha'})
+      this.setState({
+        codeImg:`${HTTP_URL}/captcha/`
+      })
+    }
   }
   componentWillUnmount() {
     window.scrollTo(0, 0);
@@ -31,12 +48,17 @@ class LoginIndex extends React.Component {
         userType: nextProps.params.status
       })
     }
+    
+    /*超过三次登陆失败，调用验证码*/
+    if(Code.Logincode>=3 && !nextProps.LoginUser.loading){
+       this.props.dispatch({type:'LoginUser/UserCaptcha'})
+    }
   }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err) {
-        // console.log('Received values of form: ', values);
+      if (err) {
+        return false;
       }
       /*请求登录*/
       this.props.dispatch({
@@ -61,8 +83,10 @@ class LoginIndex extends React.Component {
       loading
     } = this.props.LoginUser
     const {
-      userType
+      userType,
+      codeImg
     } = this.state
+    console.log(codeImg)
     return (
       <div>
 	        <div className={styles.LoginTop}>
@@ -98,6 +122,21 @@ class LoginIndex extends React.Component {
                             <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="请输入密码" autoComplete="off"/>
                           )}
                         </FormItem>
+                        {
+                          Code.Logincode>=3?
+                          <FormItem
+                            hasFeedback
+                          >
+                            {getFieldDecorator('user', {
+                              rules: [{
+                                required: true, message: '不能为空!',
+                              }],
+                            })(
+                              <Input placeholder="请输入验证码" addonAfter={<div style={{cursor:'pointer',width:150}}><img style={{height:32}} src={codeImg}/></div>}/>
+                            )}
+                          </FormItem>
+                          :null
+                        }
                         <FormItem>
                           <Button type="primary" loading={loading} htmlType="submit" size='large' className="login-form-button">
                             立即登录

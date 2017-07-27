@@ -4,7 +4,8 @@ import {
 	Userpwd,
 	Userreg,
 	Userout,
-	Usercheck
+	Usercheck,
+	UserCaptcha
 }
 from '../../api/LoginUser'
 import {
@@ -23,6 +24,9 @@ export default {
 	state: {
 		loading: false,
 		data: [],
+		/*验证次数-验证码*/
+		Logincode:0,
+		LogincodeImg:[],
 		/*向导*/
 		current: 0,
 		/*注册信息-学生*/
@@ -68,7 +72,8 @@ export default {
 			payload,
 		}, {
 			put,
-			call
+			call,
+			select,
 		}) {
 			yield put({
 				type: 'showloading',
@@ -76,6 +81,7 @@ export default {
 					loading: true
 				}
 			})
+			const Logincode=yield select(state => state.LoginUser.Logincode)
 			const {
 				data
 			} = yield call(Userlogin, payload);
@@ -88,7 +94,6 @@ export default {
 					cookie.save('AdminUser', data.content);
 					window.location.href = ADMIN_URL
 				}
-
 				yield put({
 					type: 'hideloading',
 					payload: {
@@ -97,8 +102,13 @@ export default {
 				})
 			} else {
 				message.success(data.message)
+				cookie.save('CodeTimes', {Logincode:Logincode+1});
 				yield put({
-					type: 'hideloading'
+					type: 'hideloading',
+					payload:{
+						loading:false,
+						Logincode:Logincode+1,
+					}
 				})
 			}
 
@@ -184,7 +194,23 @@ export default {
 			// cookie.remove('DemoUser');
 			// message.success('退出成功');
 
-		}
+		},
+		/*获取验证码*/
+		* UserCaptcha({
+			payload
+		}, {
+			call,
+			put
+		}) {
+			const {
+				data
+			} = yield call(UserCaptcha, payload)
+			yield put({
+				LogincodeImg:data
+			})
+			
+
+		},
 
 	},
 	reducers: {

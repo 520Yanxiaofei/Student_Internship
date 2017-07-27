@@ -78,7 +78,8 @@ class RegisterIndex extends React.Component {
 	handleSubmit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
-			if (!err) {
+			if (err) {
+				return false;
 				// console.log('Received values of form: ', values);
 			}
 			/*请求登录*/

@@ -25,7 +25,7 @@ const Login = React.createClass({
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (err) {
-        return
+        return false;
       }
       /*请求登录*/
       this.props.dispatch({
