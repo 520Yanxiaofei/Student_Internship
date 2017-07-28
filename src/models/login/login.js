@@ -5,7 +5,8 @@ import {
 	Userreg,
 	Userout,
 	Usercheck,
-	UserCaptcha
+	UserCaptcha,
+	Smsvcode
 }
 from '../../api/LoginUser'
 import {
@@ -25,8 +26,9 @@ export default {
 		loading: false,
 		data: [],
 		/*验证次数-验证码*/
-		Logincode:0,
-		LogincodeImg:[],
+		Usercode: 0,
+		Compcode: 0,
+		LogincodeImg: [],
 		/*向导*/
 		current: 0,
 		/*注册信息-学生*/
@@ -81,7 +83,7 @@ export default {
 					loading: true
 				}
 			})
-			const Logincode=yield select(state => state.LoginUser.Logincode)
+			const Usercode = yield select(state => state.LoginUser.Usercode)
 			const {
 				data
 			} = yield call(Userlogin, payload);
@@ -89,10 +91,12 @@ export default {
 				if (payload.userType == '1') {
 					yield put(routerRedux.push('/'))
 					cookie.save('DemoUser', data.content);
+					cookie.remove('CodeTimes');
 				}
 				if (payload.userType == '2') {
 					cookie.save('AdminUser', data.content);
-					window.location.href = ADMIN_URL
+					window.location.href = ADMIN_URL;
+					cookie.remove('CodeTimec');
 				}
 				yield put({
 					type: 'hideloading',
@@ -102,53 +106,32 @@ export default {
 				})
 			} else {
 				message.success(data.message)
-				cookie.save('CodeTimes', {Logincode:Logincode+1});
-				yield put({
-					type: 'hideloading',
-					payload:{
-						loading:false,
-						Logincode:Logincode+1,
-					}
-				})
+				if (payload.userType == '1') {
+					cookie.save('CodeTimes', {
+						Usercode: Usercode + 1
+					});
+					yield put({
+						type: 'hideloading',
+						payload: {
+							loading: false,
+							Usercode: Usercode + 1,
+						}
+					})
+				}
+				if (payload.userType == '2') {
+					cookie.save('CodeTimec', {
+						Compcode: Compcode + 1
+					});
+					yield put({
+						type: 'hideloading',
+						payload: {
+							loading: false,
+							Compcode: Compcode + 1,
+						}
+					})
+				}
 			}
-
-			// if (payload != '' && payload.username == 'admin' && payload.password == '123') {
-			// 	message.success('登录成功')
-			// 	cookie.save('DemoUser', payload);
-			// 	yield put(routerRedux.push('/'));
-			// 	yield put({
-			// 		type: 'hideloading'
-			// 	})
-			// } else {
-			// 	message.success('账号或者密码错误')
-			// 		// yield put(routerRedux.push('/login'));
-			// 	yield put({
-			// 		type: 'hideloading'
-			// 	})
-			// }
 		},
-		/*退出*/
-		* loginOut({
-			payload
-		}, {
-			call,
-			put
-		}) {
-			// const {
-			// 	data
-			// } = yield call(Userout, payload)
-			// if (data.status == 'SUCCESS') {
-			// 	cookie.remove('DemoUser');
-			// 	yield put(routerRedux.push('/'));
-			// } else {
-			// 	message.success(data.message);
-			// }
-			yield put(routerRedux.push('/'));
-			cookie.remove('DemoUser');
-			// message.success('退出成功');
-
-		},
-
 		/*注册*/
 		* UserReigst({
 			payload
@@ -165,14 +148,12 @@ export default {
 					yield put(routerRedux.push('/'));
 				}
 				if (payload.userType == '2') {
+					message.success('注册成功')
 					window.location.href = ADMIN_URL
 				}
-				// yield put(routerRedux.push('/login_index/login'));
 			} else {
 				message.success(data.message);
 			}
-			// cookie.remove('DemoUser');
-			// message.success('退出成功');
 
 		},
 		/*验证用户名*/
@@ -187,16 +168,13 @@ export default {
 			} = yield call(Usercheck, payload)
 			if (data.status == 'SUCCESS') {
 				message.success(data.message)
-					// yield put(routerRedux.push('/login_index/login'));
 			} else {
 				message.success(data.message);
 			}
-			// cookie.remove('DemoUser');
-			// message.success('退出成功');
 
 		},
-		/*获取验证码*/
-		* UserCaptcha({
+		/*验证手机号*/
+		* Smsvcode({
 			payload
 		}, {
 			call,
@@ -204,11 +182,7 @@ export default {
 		}) {
 			const {
 				data
-			} = yield call(UserCaptcha, payload)
-			yield put({
-				LogincodeImg:data
-			})
-			
+			} = yield call(Smsvcode, payload)
 
 		},
 

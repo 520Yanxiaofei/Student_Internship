@@ -47,7 +47,7 @@ const Routers = function({
 				}, 'station_index')
 			},
 		}, {
-			path: '/station_detai',
+			path: '/station_detai/:id',
 			getComponent(nextState, cb) {
 				require.ensure([], require => {
 					cb(null, require('./view/station/station_detai'))

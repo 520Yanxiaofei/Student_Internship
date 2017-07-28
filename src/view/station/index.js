@@ -13,12 +13,14 @@ import {
 	Col,
 	AutoComplete,
 	Tag,
-	Table
+	Table,
+	Pagination
 } from 'antd';
 import {
 	Link
 } from 'dva/router';
 import styles from './index.less';
+import Stepmodal from '../../components/modal/Steps_modal';
 const Option = AutoComplete.Option;
 
 
@@ -64,9 +66,9 @@ const columns = [{
 	title: '岗位名称',
 	dataIndex: 'station_name',
 	width: '30%',
-	render: (text) => {
+	render: (text, record) => {
 		return (
-			<h3><Link to="/station_detai">{text}</Link></h3>
+			<h3><Link target="_blank" to={`/station_detai/${record.id}`}>{text}</Link></h3>
 		)
 	}
 }, {
@@ -91,16 +93,6 @@ const columns = [{
 	}
 }];
 
-const data = [];
-for (let i = 0; i < 46; i++) {
-	data.push({
-		key: i,
-		name: `前端工程师实习生 ${i}`,
-		age: `某某有限公司${i}`,
-		address: `湖北武汉 ${i}`,
-		date: '2017.02.33'
-	});
-}
 
 class StationIndex extends React.Component {
 	state = {
@@ -124,15 +116,38 @@ class StationIndex extends React.Component {
 	componentWillUnmount() {
 		window.scrollTo(0, 0);
 	}
+
 	render() {
 		const {
 			dataSource
 		} = this.state;
-		console.log(this)
+
 		const {
 			StationListData,
 			loading
 		} = this.props.StationManage
+
+		const TableData = {
+			loading,
+			columns,
+			dataSource: StationListData.list,
+			pagination: false,
+		}
+		const PagintaionData = {
+			onChange: (current) => {
+				this.props.dispatch({
+					type: 'StationManage/StationList',
+					payload: {
+						size: 10,
+						page: current
+					}
+				})
+			},
+			current: 1,
+			defaultCurrent: 10,
+			total: StationListData.total,
+			pageSizeOptions: ['10'],
+		}
 		return (
 			<div>
       <div className={styles.StationCations}>
@@ -203,8 +218,12 @@ class StationIndex extends React.Component {
           <Col span={20}>
              <div className={styles.StationTag}>已选条件：<Tag color="orange" closable>宜昌市</Tag><Tag color="orange" closable>IT互联网</Tag><Tag color="orange" closable>前端工程师实习生</Tag></div>
              <div className={styles.StationTable}>
-                <Row><Col span={24}><Table  columns={columns} dataSource={StationListData.list} /></Col></Row>
+                <Row><Col span={24}><Table {...TableData} /></Col></Row>
+                <div style={{marginTop:20,textAlign:'right'}}>
+                <Pagination showSizeChanger {...PagintaionData}/>
+                </div>
              </div>
+             <Stepmodal/>
           </Col>
          </Row>
       </div>

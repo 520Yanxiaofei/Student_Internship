@@ -48,9 +48,11 @@ class RegisterIndex extends React.Component {
 	state = {
 		confirmDirty: false,
 		userType: this.props.params.status,
+		secs: 0,
 	}
 	componentWillUnmount() {
 		window.scrollTo(0, 0);
+		this.props.form.resetFields()
 	}
 	handleConfirmBlur = (e) => {
 		const value = e.target.value;
@@ -95,17 +97,51 @@ class RegisterIndex extends React.Component {
 	}
 	handleUser = (e) => {
 		let values = e.target.value;
-		this.props.dispatch({
-			type: 'LoginUser/Usercheck',
-			payload: {
-				username: values,
-				userType: this.state.userType
-			}
-		})
+		if (values != '') {
+			this.props.dispatch({
+				type: 'LoginUser/Usercheck',
+				payload: {
+					username: values,
+					userType: this.state.userType
+				}
+			})
+		}
+
 	}
 	callback() {
 		this.props.form.resetFields()
 	}
+	usernameCode = (rule, value, callback) => {
+		const form = this.props.form;
+		if (!value) {
+			form.validateFields(['username'], {
+				force: false
+			});
+		}
+		callback('请求中');
+	};
+	/*发送验证码*/
+	onchangeVcode() {
+		this.props.dispatch({
+			type: 'LoginUser/Smsvcode',
+			payload: {
+				phone: this.props.form.getFieldsValue().phone
+			}
+		})
+		this.timeout = setInterval(() => {
+			let num = this.state.secs
+			this.setState({
+				secs: num + 1,
+			})
+			if (num == 59) {
+				clearInterval(this.timeout)
+				this.setState({
+					secs: 0,
+				})
+			}
+		}, 1000)
+	};
+
 	render() {
 		const {
 			current
@@ -114,9 +150,9 @@ class RegisterIndex extends React.Component {
 			getFieldDecorator
 		} = this.props.form;
 		const {
-			userType
+			userType,
+			secs
 		} = this.state
-		console.log(userType)
 		return (
 			<div>
 			   <div className={styles.LoginTop}>
@@ -150,6 +186,26 @@ class RegisterIndex extends React.Component {
                     <div className="steps-content">
                     <h2 style={{textAlign:'center',marginBottom:30}}>快速注册，抢先一步</h2>
                     <Form>
+                        {
+                        	userType==2?
+                        	<FormItem
+				          {...formItemLayout}
+				          label="企业名称"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('compony_name', {
+				            rules: [{
+				              required: true, message: '不能为空!',
+				            },{
+				            	// validator:this.usernameCode,
+				            }],
+				          })(
+				            <Input placeholder="请输入企业名称"/>
+				          )}
+				        </FormItem>
+				        :null
+
+                        }
 				        <FormItem
 				          {...formItemLayout}
 				          label="账户名"
@@ -158,6 +214,8 @@ class RegisterIndex extends React.Component {
 				          {getFieldDecorator('username', {
 				            rules: [{
 				              required: true, message: '不能为空!',
+				            },{
+				            	// validator:this.usernameCode,
 				            }],
 				          })(
 				            <Input placeholder="请输入账户名" onBlur={(e)=>this.handleUser(e)}/>
@@ -190,7 +248,33 @@ class RegisterIndex extends React.Component {
 				              validator: this.checkPassword,
 				            }],
 				          })(
-				            <Input type="password" onBlur={(e)=>this.handleConfirmBlur(e)} />
+				            <Input type="password" placeholder="请输入确认密码" onBlur={(e)=>this.handleConfirmBlur(e)} />
+				          )}
+				        </FormItem>
+				         <FormItem
+				          {...formItemLayout}
+				          label="手机号"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('phone', {
+				            rules: [{
+				              required: true, message: '不能为空!',
+				            }],
+				          })(
+				            <Input placeholder="请输入手机号" type="number" addonAfter={secs==0?<div style={{cursor:'pointer'}} onClick={()=>this.onchangeVcode()}>发送验证码</div>:<div style={{cursor:'pointer'}}>已发送{secs}秒</div>}/>
+				          )}
+				        </FormItem>
+				        <FormItem
+				          {...formItemLayout}
+				          label="验证码"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('vcode', {
+				            rules: [{
+				              required: true, message: '不能为空!',
+				            }],
+				          })(
+				            <Input placeholder="请输入验证码"/>
 				          )}
 				        </FormItem>
 				        <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
@@ -204,8 +288,7 @@ class RegisterIndex extends React.Component {
               </div>  
             </Col>
           </Row>
-          </div>
-       </div>
+          </div> < /div>
 		)
 	}
 }

@@ -7,3 +7,11 @@ export async function StationList(params) {
 		body: params
 	});
 }
+/*获取详情*/
+
+export async function StationDetai(params) {
+	return request(`/biz/post/`, {
+		method: 'POST',
+		body: params
+	});
+}

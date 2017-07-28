@@ -1,5 +1,6 @@
 import {
 	StationList,
+	StationDetai,
 }
 from '../../api/StationManage'
 import {
@@ -48,7 +49,7 @@ export default {
 					payload: {
 						StationListData: {
 							list: data.content.rows,
-							Total: data.content.total
+							total: data.content.total
 						},
 						loading: false
 					}

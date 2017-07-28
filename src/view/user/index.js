@@ -16,6 +16,10 @@ import {
 import {
 	Link
 } from 'dva/router';
+import {
+	HTTP_URL
+} from '../../utils/URL';
+import cookie from 'react-cookie';
 import styles from './index.less';
 
 
@@ -173,15 +177,21 @@ for (let i = 0; i < 46; i++) {
 class UserIndex extends React.Component {
 	state = {
 			TabCurrent: '1',
+			UserStatus: cookie.load('DemoUser')
 		}
 		/*意外清除cookie是否登录*/
 	componentDidMount() {
 		this.props.dispatch({
-			type: 'LoginUser/Userinfo',
-		})
-		this.props.dispatch({
-			type: 'PersonalCenter/UserPersonal',
-		})
+				type: 'LoginUser/Userinfo',
+			})
+			// this.props.dispatch({
+			// 	type: 'PersonalCenter/UserPersonal',
+			// })
+			// console.log(this.state.UserStatus)
+			/*获取学生信息*/
+		$.get(`${HTTP_URL}/biz/applier/${this.state.UserStatus.userId}`, function(result) {
+			console.log(result)
+		}.bind(this));
 	}
 	componentWillUnmount() {
 		window.scrollTo(0, 0);

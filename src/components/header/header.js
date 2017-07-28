@@ -7,15 +7,31 @@ import {
 	Link
 } from 'dva/router';
 import cookie from 'react-cookie';
+import {
+	HTTP_URL
+} from '../../utils/URL';
+
 export default class Header extends React.Component {
 	state = {
 		UserStatus: cookie.load('DemoUser')
 	}
+	componentDidMount() {
+		// $.get(`${HTTP_URL}/user/info`, function(result) {
+		// 	console.log(result)
+		// }.bind(this));
+	}
 	ChangeOut() {
-		this.props.loginOut()
+		$.get(`${HTTP_URL}/user/logout`, function(result) {
+			console.log(result)
+			cookie.remove('DemoUser');
+			cookie.remove('CodeTimec');
+			cookie.remove('CodeTimes');
+		}.bind(this));
+		// this.props.loginOut()
 		this.setState({
 			UserStatus: cookie.load('DemoUser')
 		})
+
 	}
 	componentWillReceiveProps(nextProps) {
 		this.setState({

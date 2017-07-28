@@ -24,35 +24,34 @@ import {
 const FormItem = Form.Item;
 
 const Code = cookie.load('CodeTimes');
+const Codec = cookie.load('CodeTimec');
 
-class LoginIndex extends React.Component {
-  state = {
-    userType: this.props.params.status,
-    codeImg:'',
+/*验证码组件*/
+class Codeimg extends React.Component {
+  componentDidMount() {
+    this.codeValue()
+  };
+  /*获取验证码*/
+  ajaxcode() {
+    $.get(this.props.url, function(result) {
+      document.getElementById('codeImg').src = this.props.url;
+    }.bind(this));
+  };
+  codeValue() {
+    this.ajaxcode()
   }
-  componentDidMount(){
-    if(Code.Logincode>=3){
-      console.log(3333)
-      // this.props.dispatch({type:'LoginUser/UserCaptcha'})
-      this.setState({
-        codeImg:`${HTTP_URL}/captcha/`
-      })
-    }
+
+  render() {
+    return (
+      <div style={{cursor:'pointer',width:130}}><img alt='换一个' onClick={()=>this.codeValue()} style={{height:32}} id="codeImg" src=''/></div>
+    )
   }
+}
+
+
+class LoginForm extends React.Component {
   componentWillUnmount() {
-    window.scrollTo(0, 0);
-  }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps) {
-      this.setState({
-        userType: nextProps.params.status
-      })
-    }
-    
-    /*超过三次登陆失败，调用验证码*/
-    if(Code.Logincode>=3 && !nextProps.LoginUser.loading){
-       this.props.dispatch({type:'LoginUser/UserCaptcha'})
-    }
+    this.props.form.resetFields()
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -61,34 +60,196 @@ class LoginIndex extends React.Component {
         return false;
       }
       /*请求登录*/
-      this.props.dispatch({
-        type: 'LoginUser/Userlogin',
-        payload: {
-          ...values,
-          userType: this.state.userType
-        }
-      })
-    });
+      this.props.handleSubmit(values)
+    })
   }
-
-  callback() {
-    this.props.form.resetFields()
-  }
-
   render() {
     const {
       getFieldDecorator
     } = this.props.form;
-    const {
-      loading
-    } = this.props.LoginUser
-    const {
-      userType,
-      codeImg
-    } = this.state
-    console.log(codeImg)
     return (
-      <div>
+      <Form onSubmit={this.handleSubmit} className="login-form">
+                        <FormItem hasFeedback>
+                          {getFieldDecorator('username', {
+                            rules: [{ required: true, message: '请输入手机号或者账户名!' }],
+                          })(
+                            <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="请输入手机号或者账号" autoComplete="off"/>
+                          )}
+                        </FormItem>
+                        <FormItem hasFeedback>
+                          {getFieldDecorator('password', {
+                            rules: [{ required: true, message: '请输入密码!' }],
+                          })(
+                            <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="请输入密码" autoComplete="off"/>
+                          )}
+                        </FormItem>
+                       { 
+                        this.props.codeStatus?
+                        <Row gutter={8}>
+                          <Col span={12}>
+                          <FormItem
+                            hasFeedback
+                            className="codeInput"
+                          >
+                            {getFieldDecorator('captcha', {
+                              rules: [{
+                                required: true, message: '验证码不能为空!',
+                              }],
+                            })(
+                              <Input placeholder="请输入验证码"/>
+                            )}
+                             </FormItem>
+                            </Col>
+                            <Col span={12}>
+                              <Codeimg url={this.props.url}/>
+                            </Col>
+                          </Row>
+                        :null
+                      }
+                        <FormItem>
+                          <Button type="primary" loading={this.props.loading} htmlType="submit" size='large' className="login-form-button">
+                            立即登录
+                          </Button>
+                        </FormItem>
+                        <FormItem style={{marginBottom:0}}>
+                          <Button size='large' className="login-form-buttonDe">
+                            {(()=>{
+                              switch(this.props.userType){
+                                case '1':return <Link to='/register/1'>还没有账号</Link>
+                                case '2':return <Link to='/register/2'>还没有账号？企业注册</Link>
+                                default:return <div>页面错误</div>
+                              }
+                            })()}
+                          </Button>
+                        </FormItem>
+                      </Form>
+    )
+  }
+}
+const Logincom = Form.create()(LoginForm)
+
+
+class LoginIndex extends React.Component {
+    state = {
+      userType: this.props.params.status,
+      codeStatus: false
+    }
+    componentDidMount() {
+      this.codeValue()
+    };
+
+    /*检验本地登录次数，初始化*/
+    codeValue() {
+      if (this.state.userType == '1') {
+        if (Code && Code.Usercode != '' && Code.Usercode >= 3) {
+          this.props.dispatch({
+            type: 'LoginUser/showloading',
+            payload: {
+              Usercode: Code.Usercode
+            }
+          })
+        } else {
+          this.setState({
+            codeStatus: false,
+          })
+          this.props.dispatch({
+            type: 'LoginUser/showloading',
+            payload: {
+              Usercode: 0
+            }
+          })
+        }
+      }
+
+
+      if (this.state.userType == '2') {
+        if (Codec && Codec.Compcode != '' && Codec.Compcode >= 3) {
+          this.props.dispatch({
+            type: 'LoginUser/showloading',
+            payload: {
+              Compcode: Codec.Compcode
+            }
+          })
+        } else {
+          this.setState({
+            codeStatus: false,
+          })
+          this.props.dispatch({
+            type: 'LoginUser/showloading',
+            payload: {
+              Compcode: 0
+            }
+          })
+        }
+      }
+
+    };
+    componentWillUnmount() {
+      window.scrollTo(0, 0);
+    }
+    componentWillReceiveProps(nextProps) {
+      if (nextProps) {
+        this.setState({
+          userType: nextProps.params.status
+        })
+      }
+      /*超过三次登陆失败，调用验证码*/
+      const {
+        Usercode,
+        Compcode,
+        loading,
+      } = nextProps.LoginUser;
+      if (nextProps.params.status == '1') {
+        if (Usercode >= 3 && !loading) {
+          this.setState({
+            codeStatus: true
+          })
+        } else {
+          this.setState({
+            codeStatus: false
+          })
+        }
+      }
+      if (nextProps.params.status == '2') {
+        if (Compcode >= 3 && !loading) {
+          this.setState({
+            codeStatus: true
+          })
+        } else {
+          this.setState({
+            codeStatus: false
+          })
+        }
+      }
+    }
+    callback() {
+      this.props.form.resetFields()
+    }
+    render() {
+        const {
+          loading
+        } = this.props.LoginUser
+        const {
+          userType,
+          codeStatus
+        } = this.state
+        const LoginData = {
+          loading,
+          codeStatus,
+          userType,
+          handleSubmit: (values) => {
+            this.props.dispatch({
+              type: 'LoginUser/Userlogin',
+              payload: {
+                ...values,
+                userType: this.state.userType,
+              }
+            })
+          },
+          url: `${HTTP_URL}/captcha/`,
+        }
+        return (
+            <div>
 	        <div className={styles.LoginTop}>
 	           <div className={styles.LoginTitle}>
 	             <Link to='/'>
@@ -107,59 +268,12 @@ class LoginIndex extends React.Component {
                        <li className={userType=='2'?styles.Loginactive:null}><Link to='/login/2'>企业登录</Link></li>
                      </ul>
                      <img className={styles.LoginUserimg} src="img/login_user.png"/>
-                     <Form onSubmit={this.handleSubmit} className="login-form">
-                        <FormItem hasFeedback>
-                          {getFieldDecorator('username', {
-                            rules: [{ required: true, message: '请输入手机号或者账号!' }],
-                          })(
-                            <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="请输入手机号或者账号" autoComplete="off"/>
-                          )}
-                        </FormItem>
-                        <FormItem hasFeedback>
-                          {getFieldDecorator('password', {
-                            rules: [{ required: true, message: '请输入密码!' }],
-                          })(
-                            <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="请输入密码" autoComplete="off"/>
-                          )}
-                        </FormItem>
-                        {
-                          Code.Logincode>=3?
-                          <FormItem
-                            hasFeedback
-                          >
-                            {getFieldDecorator('user', {
-                              rules: [{
-                                required: true, message: '不能为空!',
-                              }],
-                            })(
-                              <Input placeholder="请输入验证码" addonAfter={<div style={{cursor:'pointer',width:150}}><img style={{height:32}} src={codeImg}/></div>}/>
-                            )}
-                          </FormItem>
-                          :null
-                        }
-                        <FormItem>
-                          <Button type="primary" loading={loading} htmlType="submit" size='large' className="login-form-button">
-                            立即登录
-                          </Button>
-                        </FormItem>
-                        <FormItem style={{marginBottom:0}}>
-                          <Button size='large' className="login-form-buttonDe">
-                            {(()=>{
-                              switch(userType){
-                                case '1':return <Link to='/register/1'>还没有账号</Link>
-                                case '2':return <Link to='/register/2'>还没有账号？企业注册</Link>
-                                default:return <div>页面错误</div>
-                              }
-                            })()}
-                          </Button>
-                        </FormItem>
-                      </Form>
+                     <Logincom {...LoginData}/>
               </div>  
             </Col>
           </Row>
-          </div>
-	        <Footer footerBj='default'/>
-          </div>
+          </div> <Footer footerBj='default' />
+      < /div>
     )
   }
 }
@@ -171,4 +285,4 @@ function mapStateToProps(props) {
 }
 
 /*建立数据关联关系*/
-export default connect(mapStateToProps)(Form.create()(LoginIndex));
+export default connect(mapStateToProps)(LoginIndex);

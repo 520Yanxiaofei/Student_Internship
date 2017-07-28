@@ -14,15 +14,16 @@ import {
 	Steps,
 	Radio,
 	Upload,
-	Alert
+	Alert,
+	Cascader
 } from 'antd';
 import {
 	Link
 } from 'dva/router';
-import styles from './index.less';
+// import styles from './index.less';
 import QueueAnim from 'rc-queue-anim';
 import HTTP_URL from '../../utils/URL';
-
+const cities = require('../../json/cities.json')
 const FormItem = Form.Item;
 const Step = Steps.Step;
 const RadioGroup = Radio.Group;
@@ -43,21 +44,23 @@ const formItemLayout = {
 			span: 14
 		},
 		sm: {
-			span: 18
+			span: 14
 		},
 	},
 };
 /*基本信息*/
 class UserName extends React.Component {
 	componentDidMount() {
-		// this.props.form.resetFields()
+		console.log(cities)
+			// this.props.form.resetFields()
 	}
 	handleSubmit = () => {
 		// e.preventDefault();
 		this.props.form.validateFieldsAndScroll((err, values) => {
-			if (!err) {
-				console.log('Received values of form: ', values);
+			if (err) {
+				return false
 			}
+			console.log(values)
 			this.props.handleSubmit(values)
 		});
 		// this.props.form.resetFields()
@@ -70,7 +73,6 @@ class UserName extends React.Component {
 
 		return (
 			<QueueAnim type="bottom">
-                  <h2 style={{textAlign:'center',marginBottom:15}}>填写基本信息</h2>
 			      <div key="1">
                     <Form>
 				        <FormItem
@@ -83,7 +85,7 @@ class UserName extends React.Component {
 				              required: true, message: '不能为空!',
 				            }],
 				          })(
-				            <Input placeholder="请输入用户名" onBlur={(e)=>this.props.handleUser(e.target.value)}/>
+				            <Input placeholder="请输入姓名"/>
 				          )}
 				        </FormItem>
 				        
@@ -121,7 +123,7 @@ class UserName extends React.Component {
 				              required: true, message: '不能为空!',
 				            }],
 				          })(
-				            <Input placeholder='比如湖北省武汉市'/>
+				            <Cascader options={cities} placeholder="请选择意向城市" />
 				          )}
 				        </FormItem>
 				        <FormItem
@@ -191,19 +193,6 @@ class UserName extends React.Component {
 				            <Input type="number" />
 				          )}
 				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="密码"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('password', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input type='password' placeholder="请输入密码"/>
-				          )}
-				        </FormItem>
 				        <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
 				        <Button type="primary" size='large' onClick={()=>this.handleSubmit()}>保存，下一步</Button>
 				        </FormItem>
@@ -240,7 +229,6 @@ class UserImg extends React.Component {
 		};
 		return (
 			<QueueAnim type="bottom">
-			      <h2 style={{textAlign:'center',marginBottom:15}}>上传证件</h2>
                   <Alert style={{marginBottom:15}} description="请将证件原件、核验单原件清晰拍照或彩色扫描后上传，图片文件后缀支持jpg、png、jpeg格式，上传图片大小建议在4M一下。" type="warning" />
 			      <div key="1">
                       <Form>
@@ -304,7 +292,6 @@ class BankVerification extends React.Component {
 		} = this.props.form;
 		return (
 			<QueueAnim type="bottom">
-			      <h2 style={{textAlign:'center',marginBottom:15}}>银行卡验证</h2>
                   <Alert style={{marginBottom:15}} description="用于补贴发放、转账资金，需持本人有效银行卡提供" type="warning" />
 			      <div key="1">
                       <Form onSubmit={this.handleSubmit}>
@@ -419,15 +406,15 @@ class Register extends React.Component {
 						}
 					})
 				},
-				handleUser: (values) => {
-					this.props.dispatch({
-						type: 'LoginUser/Usercheck',
-						payload: {
-							username: values,
-							userType: '1'
-						}
-					})
-				}
+				// handleUser: (values) => {
+				// 	this.props.dispatch({
+				// 		type: 'LoginUser/Usercheck',
+				// 		payload: {
+				// 			username: values,
+				// 			userType: '1'
+				// 		}
+				// 	})
+				// }
 			}
 			/*图片上传*/
 		const UserImgData = {
@@ -441,22 +428,15 @@ class Register extends React.Component {
 			}
 		}
 		return (
-			<div className={styles.LoginContent} style={{width:800,backgroundSize:'30%'}}>
-			<Row>
-            <Col span={24}>
-              <div className={styles.LoginForm} style={{paddingRight:0}}>
-                <Row>
-                  <Col span={8}>
-                    <div className={styles.ResigBottom}>
-			          <Button onClick={()=>this.props.ChangeStatus()}>已有账号？登录</Button>
-			        </div>
-                     <Steps current={current} direction="vertical" >
+
+			<div> 
+			      <div style={{margin:20,marginBottom:30}}>
+                    <Steps current={current}>
 			          <Step title='基本信息' />
 			          <Step title='证件信息' />
 			          <Step title='银行账户信息' />
 			        </Steps>
-                  </Col>
-                  <Col span={16}>
+			        </div>
                     <div className="steps-content">
                      {(()=>{
                      	switch(current){
@@ -467,12 +447,7 @@ class Register extends React.Component {
                      	}
                      })()}
                     </div>
-                  </Col>
-                </Row>
-              </div>  
-            </Col>
-          </Row>
-          </div>
+              </div>
 		)
 	}
 }

@@ -44,3 +44,11 @@ export async function UserCaptcha(params) {
 		body: params
 	});
 }
+
+/*发送短信*/
+export async function Smsvcode(params) {
+	return request(`/sms/vcode`, {
+		method: 'POST',
+		body: params
+	});
+}
