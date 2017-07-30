@@ -29,10 +29,6 @@ export default {
 		Usercode: 0,
 		Compcode: 0,
 		LogincodeImg: [],
-		/*向导*/
-		current: 0,
-		/*注册信息-学生*/
-		registData: []
 	},
 
 	subscriptions: {
@@ -131,30 +127,6 @@ export default {
 					})
 				}
 			}
-		},
-		/*注册*/
-		* UserReigst({
-			payload
-		}, {
-			call,
-			put
-		}) {
-			const {
-				data
-			} = yield call(Userreg, payload)
-			if (data.status == 'SUCCESS') {
-				if (payload.userType == '1') {
-					message.success('注册成功')
-					yield put(routerRedux.push('/'));
-				}
-				if (payload.userType == '2') {
-					message.success('注册成功')
-					window.location.href = ADMIN_URL
-				}
-			} else {
-				message.success(data.message);
-			}
-
 		},
 		/*验证用户名*/
 		* Usercheck({

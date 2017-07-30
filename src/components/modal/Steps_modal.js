@@ -14,10 +14,10 @@ class StepsModal extends React.Component {
 		visible: true
 	}
 	handleOk() {
-
+     this.setState({visible:true})
 	}
 	handleCancel() {
-
+      this.setState({visible:false})
 	}
 	render() {
 		return (
@@ -25,8 +25,9 @@ class StepsModal extends React.Component {
         <Modal
           title="申请流程，请完善信息，方便企业为你安排"
           visible={this.state.visible}
-          onOk={()=>this.handleOk}
-          onCancel={()=>this.handleCancel}
+          onOk={()=>this.handleOk()}
+          onCancel={()=>this.handleCancel()}
+          footer={null}
         >
           <Register/>
         </Modal>

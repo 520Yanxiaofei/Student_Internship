@@ -1,5 +1,6 @@
 import {
 	UserPersonal,
+	ApplierAdd
 }
 from '../../api/PersonalCenter'
 import {
@@ -16,7 +17,14 @@ export default {
 	state: {
 		loading: false,
 		PersonalData: [],
-		data: []
+		data: [],
+
+		/*向导*/
+		current: 1,
+		loading0:false,
+		loading1:false,
+		/*注册信息-学生*/
+		registData: []
 	},
 
 	subscriptions: {
@@ -29,7 +37,43 @@ export default {
 		/*
          学生信息
         */
-		* UserPersonal({
+		// * UserPersonal({
+		// 	payload
+		// }, {
+		// 	call,
+		// 	put
+		// }) {
+		// 	yield put({
+		// 		type: 'showloading',
+		// 		payload: {
+		// 			loading: true
+		// 		}
+		// 	})
+		// 	const {
+		// 		data
+		// 	} = yield call(UserPersonal, {
+		// 		userId: UserStatus.userId
+		// 	});
+		// 	if (data.status == 'SUCCESS') {
+		// 		console.log(data)
+		// 			// yield put({
+		// 			// 	type: 'SuccessData',
+		// 			// 	payload: {
+		// 			// 		PersonalData: {
+		// 			// 			list: data.content.rows,
+		// 			// 			Total: data.content.total
+		// 			// 		},
+		// 			// 		loading: false
+		// 			// 	}
+		// 			// })
+		// 	} else {
+		// 		// message.success(data.message)
+		// 	}
+		// },
+		/*
+         学生报名信息
+        */
+		* ApplierAdd({
 			payload
 		}, {
 			call,
@@ -38,26 +82,19 @@ export default {
 			yield put({
 				type: 'showloading',
 				payload: {
-					loading: true
+					loading0: true
 				}
 			})
 			const {
 				data
-			} = yield call(UserPersonal, {
-				userId: UserStatus.userId
-			});
+			} = yield call(ApplierAdd, payload);
 			if (data.status == 'SUCCESS') {
-				console.log(data)
-					// yield put({
-					// 	type: 'SuccessData',
-					// 	payload: {
-					// 		PersonalData: {
-					// 			list: data.content.rows,
-					// 			Total: data.content.total
-					// 		},
-					// 		loading: false
-					// 	}
-					// })
+					yield put({
+						type: 'showloading',
+						payload: {
+							loading0: false
+						}
+					})
 			} else {
 				// message.success(data.message)
 			}
@@ -89,7 +126,7 @@ export default {
 		hideloading(state, action) {
 			return {
 				...state,
-				loading: false
+				...action.payload
 			}
 		}
 	},

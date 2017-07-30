@@ -8,3 +8,10 @@ export async function UserPersonal(params) {
 		body: params
 	});
 }
+/*报名注册信息*/
+export async function ApplierAdd(params) {
+	return request(`/biz/applier/add`, {
+		method: 'POST',
+		body: params
+	});
+}

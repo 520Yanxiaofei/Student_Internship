@@ -189,8 +189,9 @@ class UserIndex extends React.Component {
 			// })
 			// console.log(this.state.UserStatus)
 			/*获取学生信息*/
-		$.get(`${HTTP_URL}/biz/applier/${this.state.UserStatus.userId}`, function(result) {
-			console.log(result)
+			console.log('本地cookie信息',this.state.UserStatus)
+		$.get(`${HTTP_URL}/biz/applier?userId=${this.state.UserStatus.userId}`, function(result) {
+			console.log('biz/applier/id',result)
 		}.bind(this));
 	}
 	componentWillUnmount() {
