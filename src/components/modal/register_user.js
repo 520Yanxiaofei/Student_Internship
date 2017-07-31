@@ -22,9 +22,11 @@ import {
 } from 'dva/router';
 // import styles from './index.less';
 import QueueAnim from 'rc-queue-anim';
-import {HTTP_URL} from '../../utils/URL';
+import {
+	HTTP_URL
+} from '../../utils/URL';
 import cookie from 'react-cookie';
-const LoginStatus=cookie.load('DemoUser')
+const LoginStatus = cookie.load('DemoUser')
 const cities = require('../../json/cities.json')
 const FormItem = Form.Item;
 const Step = Steps.Step;
@@ -52,148 +54,20 @@ const formItemLayout = {
 };
 
 
-/*银行卡验证*/
-class BankVerification extends React.Component {
-	state={
-		confirmDirty: false,
-	}
-	handleSubmit = () => {
-		this.props.form.validateFieldsAndScroll((err, values) => {
-			if (err) {
-				return false;
-			}
-			this.props.handleSubmitBlak(values)
-		});
-		
-	}
-	handleConfirmBlur = (e) => {
-		const value = e.target.value;
-		this.setState({
-			confirmDirty: this.state.confirmDirty || !!value
-		});
-	}
-	checkCord = (rule, value, callback) => {
-		const form = this.props.form;
-		if (value && value !== form.getFieldValue('card_number')) {
-			callback('两次卡号不一致!');
-		} else {
-			callback();
-		}
-	}
-	checkConfirm = (rule, value, callback) => {
-		const form = this.props.form;
-		if (value && this.state.confirmDirty) {
-			form.validateFields(['confirm'], {
-				force: true
-			});
-		}
-		callback();
-	}
-	render() {
-		const {
-			getFieldDecorator
-		} = this.props.form;
-		return (
-			<QueueAnim type="bottom">
-                  <Alert style={{marginBottom:15}} description="用于补贴发放、转账资金，需持本人有效银行卡提供" type="warning" />
-			      <div key="1">
-                      <Form onSubmit={this.handleSubmit}>
-				         <FormItem
-				          {...formItemLayout}
-				          label="银行名称"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('bank_name', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input placeholder='请填写银行全称'/>
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="银行卡号"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('card_number', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }, {
-				              validator: this.checkConfirm,
-				            }],
-				          })(
-				            <Input type='number' placeholder="请输入卡号"/>
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="再次确认卡号"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('confirm', {
-				            rules: [{
-				              required: true, message: '确认卡号不能为空!',
-				            }, {
-				              validator: this.checkCord,
-				            }],
-				          })(
-				            <Input type="number" placeholder="请输入确认卡号" onBlur={(e)=>this.handleConfirmBlur(e)} />
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="手机号"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('phone', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input type='number' placeholder='输入手机号验证' addonAfter={<div style={{cursor:'pointer'}}>发送验证码</div>}/>
-				          )}
-				        </FormItem>
-				        <FormItem
-				          {...formItemLayout}
-				          label="验证码"
-				          hasFeedback
-				        >
-				          {getFieldDecorator('vcode', {
-				            rules: [{
-				              required: true, message: '不能为空!',
-				            }],
-				          })(
-				            <Input style={{width:160}} placeholder='请输入短信验证码'/>
-				          )}
-				        </FormItem>
-				        <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
-				        <Button type="primary" size='large' onClick={()=>this.handleSubmit()}>已完善，开始注册</Button>
-				         <Button size='large'  style={{ marginLeft:10 }} onClick={() => this.props.prev()}>返回上一步</Button>
-				        </FormItem>
-				      </Form>
-			      </div>
-			</QueueAnim>
-		)
-	}
-}
-
-
-const BankVerificationform = Form.create()(BankVerification)
-
 
 class Register extends React.Component {
 	constructor(props) {
 		super(props);
 	}
-	state={
-		userData:[],
-		student_img:'',
-		student_thuimg:'',
-		identity_img:'',
-		identity_thuimg:'',
-		bank_img:'',
-		bank_thuimg:''
+	state = {
+		userData: [],
+		student_img: '',
+		student_thuimg: [],
+		identity_img: '',
+		identity_thuimg: [],
+		bank_img: '',
+		bank_thuimg: [],
+		confirmDirty: false,
 	}
 	componentWillUnmount() {
 		window.scrollTo(0, 0);
@@ -220,82 +94,167 @@ class Register extends React.Component {
 			}
 		})
 	}
-	handleSubmit1(values){
-		this.props.form.validateFieldsAndScroll((err, values) => {
+	handleSubmit1(values) {
+			this.props.form.validateFieldsAndScroll((err, values) => {
+				if (err) {
+					return false
+				}
+				this.props.dispatch({
+					type: 'PersonalCenter/showloading',
+					payload: {
+						registData: {
+							...values,
+						}
+					}
+				})
+				this.next()
+			})
+		}
+		/*验证并提交*/
+	onSubmitImg() {
+		this.props.form.validateFields((err, values) => {
 			if (err) {
 				return false
 			}
+			const {
+				registData
+			} = this.props.PersonalCenter;
+			const {
+				student_img,
+				identity_img,
+				bank_img,
+			} = this.state;
+			console.log('values', values)
 			this.props.dispatch({
-				type:'PersonalCenter/showloading',
-				payload:{
-					registData:{
-						...values,
+				type: 'PersonalCenter/showloading',
+				payload: {
+					registData: {
+						...registData,
+						student_img,
+						identity_img,
+						bank_img
 					}
 				}
 			})
 			this.next()
 		});
-			// this.props.dispatch({
-			// 	type: 'PersonalCenter/ApplierAdd',
-			// 	payload: {
-			// 		...values,
-			// 		userId:LoginStatus.userId
-			// 	}
-			// })
-		}
-	/*验证并提交*/
-	onSubmitImg(){
-		const {student_img,identity_img,bank_img}=this.state;
-		if(student_img==''){
-			message.warning('请上传学生证复印件')
-			return false
-		}
-		if(identity_img==''){
-			message.warning('请上传身份证复印件')
-			return false
-		}
-		if(bank_img==''){
-			message.warning('请上传银行卡复印件')
-			return false
-		}
-		let value={student_img,identity_img,bank_img}
-		const {registData}=this.props.PersonalCenter;
-		this.props.dispatch({
-			type:'PersonalCenter/showloading',
-			payload:{
-				registData:{
-					...registData,
-					...value
-				}
+		// const {
+		// 	student_img,
+		// 	identity_img,
+		// 	bank_img
+		// } = this.state;
+		// if (student_img == '') {
+		// 	message.warning('请上传学生证复印件')
+		// 	return false
+		// }
+		// if (identity_img == '') {
+		// 	message.warning('请上传身份证复印件')
+		// 	return false
+		// }
+		// if (bank_img == '') {
+		// 	message.warning('请上传银行卡复印件')
+		// 	return false
+		// }
+		// let value = {
+		// 	student_img,
+		// 	identity_img,
+		// 	bank_img
+		// }
+	}
+	normFile = (data, name) => {
+			if (data.file.status == "done") {
+				const keyId = data.file.response.content;
+				if (name == 'student_img') this.setState({
+					student_img: keyId,
+					student_thuimg: [{...data.fileList[0]
+					}]
+				})
+				if (name == 'identity_img') this.setState({
+					identity_img: keyId,
+					identity_thuimg: [{...data.fileList[0]
+					}]
+				})
+				if (name == 'bank_img') this.setState({
+					bank_img: keyId,
+					bank_thuimg: [{...data.fileList[0]
+					}]
+				})
 			}
-		})
-	}
-	/*上传文件*/
-	onChange(data,name){
-		
-		 if(data.file.status=="done"){
-		 	const keyId=data.file.response.content;
-			if(name=='student_img')this.setState({student_img:keyId,student_thuimg:data.file.thumbUrl})
-			if(name=='identity_img')this.setState({identity_img:keyId,identity_thuimg:data.file.thumbUrl})
-			if(name=='bank_img')this.setState({bank_img:keyId,bank_thuimg:data.file.thumbUrl})
+
+			if (Array.isArray(data)) {
+				return data;
+			}
+			return data && data.fileList;
 		}
-	}
-	/*删除文件*/
-	onRemove(data,name){
+		/*删除文件*/
+	onRemove(data, name) {
 		console.log(data)
-		if(data.status="removed"){
-			const keyid=data.response.content
-			if(name=='student_img')this.setState({student_img:'',student_thuimg:''})
-			if(name=='identity_img')this.setState({identity_img:'',identity_thuimg:''})
-			if(name=='bank_img')this.setState({bank_img:'',bank_thuimg:''})
+		if (data.status = "removed") {
+			const keyid = data.response.content
+			if (name == 'student_img') this.setState({
+				student_img: '',
+				student_thuimg: []
+			})
+			if (name == 'identity_img') this.setState({
+				identity_img: '',
+				identity_thuimg: []
+			})
+			if (name == 'bank_img') this.setState({
+				bank_img: '',
+				bank_thuimg: []
+			})
 			$.ajax({
-			 url:`${HTTP_URL}/file/${keyid}`,
-			 type: 'DELETE',
-			 success: function(result) {
-			 }
+				url: `${HTTP_URL}/file/${keyid}`,
+				type: 'DELETE',
+				success: function(result) {}
 			});
 		}
-		
+
+	}
+
+	/*银行卡验证*/
+	handleSubmit2 = () => {
+		this.props.form.validateFieldsAndScroll((err, values) => {
+			if (err) {
+				return false;
+			}
+			const {
+				registData
+			} = this.props.PersonalCenter;
+			this.props.dispatch({
+				type: 'PersonalCenter/showloading',
+				payload: {
+					registData: {
+						...registData,
+						...values
+					}
+				}
+			})
+		});
+
+	}
+	handleConfirmBlur = (e) => {
+		const value = e.target.value;
+		this.setState({
+			confirmDirty: this.state.confirmDirty || !!value
+		});
+	}
+	checkCord = (rule, value, callback) => {
+		const form = this.props.form;
+		if (value && value !== form.getFieldValue('card_number')) {
+			callback('两次卡号不一致!');
+		} else {
+			callback();
+		}
+	}
+	checkConfirm = (rule, value, callback) => {
+		const form = this.props.form;
+		if (value && this.state.confirmDirty) {
+			form.validateFields(['confirm'], {
+				force: true
+			});
+		}
+		callback();
 	}
 	render() {
 		const {
@@ -303,66 +262,23 @@ class Register extends React.Component {
 			loading0,
 			registData,
 		} = this.props.PersonalCenter;
-		const {userData}=this.state;
+		const {
+			userData
+		} = this.state;
 		console.log(registData)
-		/*基本信息*/
-			/*图片上传*/
-		const UserImgData = {
-			onSubmitImg: (valueImg) => {
-                this.setState({
-                	userData:{
-                		...userData,
-                		...valueImg
-                	}
-                })
-                this.next()
-				
-			},
-			prev: () => {
-				this.prev()
-			}
-		};
-		/*银行卡验证*/
-		const BalkData={
-			handleSubmitBlak:(values)=>{
-				this.setState({
-                	userData:{
-                		...userData,
-                		...values
-                	}
-                })
-			},
-			prev: () => {
-				this.prev()
-			}
-		}
-
 		const {
 			getFieldDecorator
 		} = this.props.form;
-			
+
 		/*图片上传*/
-		const props= {
-			action: `${HTTP_URL}/file/`,
-			listType: 'picture',
-			name: 'file',
-			showUploadList: true,
-			multiple:false,
-			accept: 'image/jpeg,image/jpg,image/png',
-		};
-		const {student_img,student_thuimg,identity_img,identity_thuimg,bank_img,bank_thuimg}=this.state;
-		const fileimg1={
-			defaultFileList:[{
-			  uid:-1,
-			  id: 1,
-			  status: 'removed',
-			  thumbUrl:student_thuimg,
-			}]
-		}
-
-		console.log(fileimg1)
-		
-
+		const {
+			student_img,
+			student_thuimg,
+			identity_img,
+			identity_thuimg,
+			bank_img,
+			bank_thuimg
+		} = this.state;
 		return (
 
 			<div> 
@@ -494,20 +410,6 @@ class Register extends React.Component {
 							            <Input />
 							          )}
 							        </FormItem>
-							         <FormItem
-							          {...formItemLayout}
-							          label="手机号"
-							          hasFeedback
-							        >
-							          {getFieldDecorator('phone', {
-							          	initialValue:registData.phone,
-							            rules: [{
-							              required: true, message: '不能为空!',
-							            }],
-							          })(
-							            <Input type="number" />
-							          )}
-							        </FormItem>
 							        <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
 							        <Button loading={loading0} type="primary" size='large' onClick={()=>this.handleSubmit1()}>保存，下一步</Button>
 							        </FormItem>
@@ -524,49 +426,71 @@ class Register extends React.Component {
 							        <FormItem
 							          {...formItemLayout}
 							          label="学生证"
-							          hasFeedback
 							        >
-							        
-				                        <Upload {...props} {...fileimg1}  onChange={(file)=>this.onChange(file,'student_img')} onRemove={(file)=>this.onRemove(file,'student_img')}>
-										      {
-										      	student_img==''?
+							        {getFieldDecorator('student_img', {
+							            valuePropName: 'fileList',
+							            initialValue:student_thuimg,
+							            rules: [{
+							              required: true, message: '请上传学生证复印件!',
+							            }],
+							            getValueFromEvent:(file)=>this.normFile(file,'student_img'),
+							          })(
+							            <Upload name="file" action={`${HTTP_URL}/file/`} listType="picture" onRemove={(file)=>this.onRemove(file,'student_img')}>
+										     {
+									           student_img==''?
 										      	<Button>
 										        <Icon type="upload" /> 上传学生证复印件
 										       </Button>
-										      :null
-										     }
+										       :null
+										      }
 									    </Upload>
-									    
+							          )}
 							       </FormItem>
 							       <FormItem
 							          {...formItemLayout}
 							          label="身份证"
-							          hasFeedback
 							        >
-			                         <Upload {...props} onChange={(file)=>this.onChange(file,'identity_img')} onRemove={(file)=>this.onRemove(file,'identity_img')}>
-			                         {
-									  identity_img==''?
-								      <Button>
-								        <Icon type="upload" /> 上传身份证复印件
-								      </Button>
-								     :null
-								     }
-								    </Upload>
+							        {getFieldDecorator('identity_img', {
+							            valuePropName: 'fileList',
+							            initialValue:identity_thuimg,
+							            rules: [{
+							              required: true, message: '请上传身份证复印件!',
+							            }],
+							            getValueFromEvent:(file)=>this.normFile(file,'identity_img'),
+							          })(
+							            <Upload name="file" action={`${HTTP_URL}/file/`} listType="picture" onRemove={(file)=>this.onRemove(file,'identity_img')}>
+										     {
+									           identity_img==''?
+										      	<Button>
+										        <Icon type="upload" /> 上传身份证复印件
+										       </Button>
+										       :null
+										      }
+									    </Upload>
+							          )}
 							       </FormItem>
 							       <FormItem
 							          {...formItemLayout}
 							          label="银行卡"
-							          hasFeedback
 							        >
-			                         <Upload {...props}  onChange={(file)=>this.onChange(file,'bank_img')} onRemove={(file)=>this.onRemove(file,'bank_img')}>
-			                         {
-									  bank_img==''?
-								      <Button>
-								        <Icon type="upload" /> 上传银行卡复印件
-								      </Button>
-								      :null
-								     }
-								    </Upload>
+							        {getFieldDecorator('bank_img', {
+							            valuePropName: 'fileList',
+							            initialValue:bank_thuimg,
+							            rules: [{
+							              required: true, message: '请上传银行卡复印件!',
+							            }],
+							            getValueFromEvent:(file)=>this.normFile(file,'bank_img'),
+							          })(
+							            <Upload name="file" action={`${HTTP_URL}/file/`} listType="picture" onRemove={(file)=>this.onRemove(file,'bank_img')}>
+										     {
+									           bank_img==''?
+										      	<Button>
+										        <Icon type="upload" /> 上传银行卡复印件
+										       </Button>
+										       :null
+										      }
+									    </Upload>
+							          )}
 							       </FormItem>
 							       <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
 							        <Button type="primary" size='large' onClick={()=>this.onSubmitImg()}>保存，下一步</Button>
@@ -576,9 +500,93 @@ class Register extends React.Component {
 						      </div>
                      	:null
                      }
+                     {
+                     	current==2?
+                     	<Form onSubmit={this.handleSubmit2}>
+                     	 <Alert style={{marginBottom:15}} description="用于补贴发放、转账资金，需持本人有效银行卡提供" type="warning" />
+				         <FormItem
+				          {...formItemLayout}
+				          label="银行名称"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('bank_name', {
+				          	initialValue:registData.bank_name,
+				            rules: [{
+				              required: true, message: '不能为空!',
+				            }],
+				          })(
+				            <Input placeholder='请填写银行全称'/>
+				          )}
+				        </FormItem>
+				        <FormItem
+				          {...formItemLayout}
+				          label="银行卡号"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('card_number', {
+				          	initialValue:registData.card_number,
+				            rules: [{
+				              required: true, message: '不能为空!',
+				            }, {
+				              validator: this.checkConfirm,
+				            }],
+				          })(
+				            <Input type='number' placeholder="请输入卡号"/>
+				          )}
+				        </FormItem>
+				        <FormItem
+				          {...formItemLayout}
+				          label="再次确认卡号"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('confirm', {
+				          	initialValue:registData.confirm,
+				            rules: [{
+				              required: true, message: '确认卡号不能为空!',
+				            }, {
+				              validator: this.checkCord,
+				            }],
+				          })(
+				            <Input type="number" placeholder="请输入确认卡号" onBlur={this.handleConfirmBlur} />
+				          )}
+				        </FormItem>
+				        <FormItem
+				          {...formItemLayout}
+				          label="手机号"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('phone', {
+				          	initialValue:registData.phone,
+				            rules: [{
+				              required: true, message: '不能为空!',
+				            }],
+				          })(
+				            <Input type='number' placeholder='输入手机号验证' addonAfter={<div style={{cursor:'pointer'}}>发送验证码</div>}/>
+				          )}
+				        </FormItem>
+				        <FormItem
+				          {...formItemLayout}
+				          label="验证码"
+				          hasFeedback
+				        >
+				          {getFieldDecorator('vcode', {
+				          	initialValue:registData.vcode,
+				            rules: [{
+				              required: true, message: '不能为空!',
+				            }],
+				          })(
+				            <Input style={{width:160}} placeholder='请输入短信验证码'/>
+				          )}
+				        </FormItem>
+				        <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
+				        <Button type="primary" size='large' onClick={this.handleSubmit2}>已完善，开始注册</Button>
+				         <Button size='large'  style={{ marginLeft:10 }} onClick={()=>this.prev()}>返回上一步</Button>
+				        </FormItem>
+				      </Form>
+                     	:null
+                     }
                     
-                    </div>
-              </div>
+                    </div> < /div>
 		)
 	}
 }
@@ -586,7 +594,7 @@ class Register extends React.Component {
 
 function mapStateToProps(props) {
 	return {
-		PersonalCenter:props.PersonalCenter
+		PersonalCenter: props.PersonalCenter
 	};
 }
 

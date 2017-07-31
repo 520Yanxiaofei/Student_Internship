@@ -21,10 +21,11 @@ export default {
 
 		/*向导*/
 		current: 1,
-		loading0:false,
-		loading1:false,
+		loading0: false,
+		loading1: false,
 		/*注册信息-学生*/
-		registData: []
+		registData: [],
+		student_thuimg: {}
 	},
 
 	subscriptions: {
@@ -89,12 +90,12 @@ export default {
 				data
 			} = yield call(ApplierAdd, payload);
 			if (data.status == 'SUCCESS') {
-					yield put({
-						type: 'showloading',
-						payload: {
-							loading0: false
-						}
-					})
+				yield put({
+					type: 'showloading',
+					payload: {
+						loading0: false
+					}
+				})
 			} else {
 				// message.success(data.message)
 			}
