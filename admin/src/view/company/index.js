@@ -14,11 +14,13 @@ import {
 	Input,
 	Breadcrumb,
 	Button,
-	Select
+	Select,
+	Cascader
 } from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import styles from './index.less';
 import Localhostd from '../../components/public/localhost';
+const cities = require('../../json/cities.json')
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -103,6 +105,46 @@ class CompanyIndex extends React.Component {
 								    <Option value="互联网IT">互联网IT</Option>
 								    <Option value="金融类">金融类</Option>
 								  </Select>
+					          )}
+					        </FormItem>
+					        <FormItem
+					          {...formItemLayout}
+					          label="所在城市"
+					          hasFeedback
+					        >
+					          {getFieldDecorator('city', {
+					          	initialValue:'',
+					            rules: [{
+					              required: true, message: '不能为空!',
+					            }],
+					          })(
+					            <Cascader options={cities} placeholder="请选择城市" />
+					          )}
+					        </FormItem>
+					        <FormItem
+					          {...formItemLayout}
+					          label="企业电话"
+					          hasFeedback
+					        >
+					          {getFieldDecorator('station', {
+					            rules: [{
+					              required: true, message: '企业电话不能为空!',
+					            }],
+					          })(
+					            <Input type='number' placeholder='企业电话'/>
+					          )}
+					        </FormItem>
+					        <FormItem
+					          {...formItemLayout}
+					          label="详细地址"
+					          hasFeedback
+					        >
+					          {getFieldDecorator('station', {
+					            rules: [{
+					              required: true, message: '详细地址不能为空!',
+					            }],
+					          })(
+					            <Input placeholder='请输入详细地址'/>
 					          )}
 					        </FormItem>
 					        <FormItem wrapperCol={{ span: 10, offset: 2 }}>

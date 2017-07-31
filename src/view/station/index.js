@@ -61,48 +61,32 @@ function renderOption(item) {
 }
 
 
-/*搜索结果*/
-const columns = [{
-	title: '岗位名称',
-	dataIndex: 'station_name',
-	width: '30%',
-	render: (text, record) => {
-		return (
-			<h3><Link target="_blank" to={`/station_detai/${record.id}`}>{text}</Link></h3>
-		)
-	}
-}, {
-	title: '企业名称',
-	dataIndex: '',
-	width: '30%',
-}, {
-	title: '城市',
-	dataIndex: '',
-	width: '10%',
-}, {
-	title: '发布日期',
-	dataIndex: '',
-	width: '10%',
-}, {
-	title: '操作',
-	width: '10%',
-	render: () => {
-		return (
-			<Button><Link to="">申请职位</Link></Button>
-		)
-	}
-}];
 
 
 class StationIndex extends React.Component {
 	state = {
 		dataSource: [],
+		visible:false,
+		shenfont:0
 	}
 
 	handleSearch = (value) => {
 		this.setState({
 			dataSource: value ? searchResult(value) : [],
 		});
+	}
+	handvisible(record){
+       console.log(record)
+		// this.setState({
+		// 	visible:true
+		// })
+		
+		this.props.dispatch({
+				type:'PersonalCenter/ApplierAddsd',
+				payload:{
+					...record,
+				}
+			})
 	}
 	componentDidMount() {
 		this.props.dispatch({
@@ -126,7 +110,37 @@ class StationIndex extends React.Component {
 			StationListData,
 			loading
 		} = this.props.StationManage
-
+        /*搜索结果*/
+		const columns = [{
+			title: '岗位名称',
+			dataIndex: 'station_name',
+			width: '30%',
+			render: (text, record) => {
+				return (
+					<h3><Link target="_blank" to={`/station_detai/${record.id}`}>{text}</Link></h3>
+				)
+			}
+		}, {
+			title: '企业名称',
+			dataIndex: '',
+			width: '30%',
+		}, {
+			title: '城市',
+			dataIndex: '',
+			width: '10%',
+		}, {
+			title: '发布日期',
+			dataIndex: '',
+			width: '10%',
+		}, {
+			title: '操作',
+			width: '10%',
+			render: (text,record) => {
+				return (
+					<Button onClick={()=>this.handvisible(record)}>申请职位</Button>
+				)
+			}
+		}];
 		const TableData = {
 			loading,
 			columns,
@@ -148,6 +162,8 @@ class StationIndex extends React.Component {
 			total: StationListData.total,
 			pageSizeOptions: ['10'],
 		}
+
+
 		return (
 			<div>
       <div className={styles.StationCations}>
@@ -223,7 +239,7 @@ class StationIndex extends React.Component {
                 <Pagination showSizeChanger {...PagintaionData}/>
                 </div>
              </div>
-             <Stepmodal/>
+             <Stepmodal visible={this.state.visible} handleCancel={()=>this.setState({visible:false})}/>
           </Col>
          </Row>
       </div>
@@ -237,6 +253,7 @@ class StationIndex extends React.Component {
 function mapStateToProps(props) {
 	return {
 		StationManage: props.StationManage,
+		PersonalCenter:props.PersonalCenter
 	};
 }
 

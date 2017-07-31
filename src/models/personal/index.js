@@ -1,6 +1,7 @@
 import {
 	UserPersonal,
-	ApplierAdd
+	ApplierAdd,
+	ApplierAddsd
 }
 from '../../api/PersonalCenter'
 import {
@@ -20,7 +21,7 @@ export default {
 		data: [],
 
 		/*向导*/
-		current: 1,
+		current: 0,
 		loading0: false,
 		loading1: false,
 		/*注册信息-学生*/
@@ -90,12 +91,42 @@ export default {
 				data
 			} = yield call(ApplierAdd, payload);
 			if (data.status == 'SUCCESS') {
+				cookie.save('ResigerData', data.content);
 				yield put({
 					type: 'showloading',
 					payload: {
 						loading0: false
 					}
 				})
+			} else {
+				// message.success(data.message)
+			}
+		},
+		/*申请*/
+		* ApplierAddsd({
+			payload
+		}, {
+			call,
+			put
+		}) {
+			// yield put({
+			// 	type: 'showloading',
+			// 	payload: {
+			// 		loading0: true
+			// 	}
+			// })
+			const {
+				data
+			} = yield call(ApplierAddsd, payload);
+			if (data.status == 'SUCCESS') {
+				console.log(data)
+				// cookie.save('ResigerData', data.content);
+				// yield put({
+				// 	type: 'showloading',
+				// 	payload: {
+				// 		loading0: false
+				// 	}
+				// })
 			} else {
 				// message.success(data.message)
 			}

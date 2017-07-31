@@ -15,3 +15,10 @@ export async function ApplierAdd(params) {
 		body: params
 	});
 }
+/*申请职位*/
+export async function ApplierAddsd(params) {
+	return request(`/biz/post/add`, {
+		method: 'POST',
+		body: params
+	});
+}

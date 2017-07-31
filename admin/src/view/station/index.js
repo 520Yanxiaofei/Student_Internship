@@ -17,13 +17,15 @@ import {
 	Input,
 	Breadcrumb,
 	Button,
-	Select
+	Select,
+	Cascader
 } from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import styles from './index.less';
 import Localhostd from '../../components/public/localhost';
 import Edit from '../../components/public/edit';
 import StationDetai from '../../components/modal/station_detai';
+const cities = require('../../json/cities.json')
 const FormItem = Form.Item;
 
 const formItemLayout = {
@@ -63,12 +65,22 @@ class StationAdd extends React.Component {
 				console.log('Received values of form: ', values);
 			}
 			if (!values.station_tag) return null;
+			var date=new Date();
+            var mydate=date.getDate();
+            var modate=date.getMonth()+1;
+			if(mydate<10){
+               mydate='0'+mydate
+			}
+			if(modate<10){
+                 modate='0'+modate;
+			}
 			this.props.dispatch({
 				type: 'StationManage/StationAdd',
 				payload: {
 					...values,
 					station_tag: values.station_tag.join(','),
-					htmlBody: this.state.html
+					htmlBody: this.state.html,
+					date:`${date.getFullYear()}-${mydate}-${modate}`
 				}
 			})
 		});
@@ -133,6 +145,20 @@ class StationAdd extends React.Component {
 					            }],
 					          })(
 					            <Input placeholder='请填写岗位名称'/>
+					          )}
+					        </FormItem>
+					        <FormItem
+					          {...formItemLayout}
+					          label="工作城市"
+					          hasFeedback
+					        >
+					          {getFieldDecorator('address', {
+					          	initialValue:'',
+					            rules: [{
+					              required: true, message: '不能为空!',
+					            }],
+					          })(
+					            <Cascader options={cities} placeholder="请选择工作城市" />
 					          )}
 					        </FormItem>
 					        <FormItem

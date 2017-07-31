@@ -21,13 +21,13 @@ export default class Header extends React.Component {
 		// }.bind(this));
 	}
 	ChangeOut() {
-		$.get(`${HTTP_URL}/user/logout`, function(result) {
-			console.log(result)
-			cookie.remove('DemoUser');
-			cookie.remove('CodeTimec');
-			cookie.remove('CodeTimes');
-		}.bind(this));
-		// this.props.loginOut()
+		// $.get(`${HTTP_URL}/user/logout`, function(result) {
+		// 	console.log(result)
+		// 	cookie.remove('DemoUser');
+		// 	cookie.remove('CodeTimec');
+		// 	cookie.remove('CodeTimes');
+		// }.bind(this));
+		this.props.loginOut()
 		this.setState({
 			UserStatus: cookie.load('DemoUser')
 		})
@@ -39,9 +39,11 @@ export default class Header extends React.Component {
 		})
 	}
 	render() {
+
 		const {
 			UserStatus
 		} = this.state;
+		console.log(UserStatus)
 		return (
 			<div className={styles.HeaderTop}>
 			  <div className={styles.HeaderAuto}>

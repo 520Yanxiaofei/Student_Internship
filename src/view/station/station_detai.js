@@ -54,6 +54,7 @@ class StationDetai extends React.Component {
       detai_data,
       loading
     } = this.state;
+    console.log(detai_data)
     return (
       <div>
       <div className={styles.StationDetaiCations}>

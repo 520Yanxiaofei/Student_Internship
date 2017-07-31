@@ -155,6 +155,22 @@ export default {
 			const {
 				data
 			} = yield call(Smsvcode, payload)
+			yield put(routerRedux.push('/'))
+			cookie.remove('CodeTimec');
+			cookie.remove('CodeTimes');
+			cookie.remove('DemoUser')
+
+		},
+		/*退出*/
+		* loginOut({
+			payload
+		}, {
+			call,
+			put
+		}) {
+			// const {
+			// 	data
+			// } = yield call(Smsvcode, payload)
 
 		},
 

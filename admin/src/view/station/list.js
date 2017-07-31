@@ -45,6 +45,11 @@ const columnsNetdata = [{
 	key: 'station_category',
 	width: '20%'
 }, {
+	title: '工作城市',
+	dataIndex: 'station_address',
+	key: 'station_tag',
+	width: '10%',
+}, {
 	title: '岗位标签',
 	dataIndex: 'station_tag',
 	key: 'station_tag',
@@ -54,7 +59,7 @@ const columnsNetdata = [{
 			<span>{text.split(',')}</span>
 		)
 	}
-}, {
+},{
 	title: '发布日期',
 	dataIndex: 'task_ip',
 	key: 'task_ip',

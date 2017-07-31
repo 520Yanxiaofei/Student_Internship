@@ -177,21 +177,23 @@ for (let i = 0; i < 46; i++) {
 class UserIndex extends React.Component {
 	state = {
 			TabCurrent: '1',
-			UserStatus: cookie.load('DemoUser')
+			UserStatus: cookie.load('DemoUser'),
+			ResisterData:cookie.load('ResigerData'),
+			UserData:[]
 		}
 		/*意外清除cookie是否登录*/
 	componentDidMount() {
-		this.props.dispatch({
-				type: 'LoginUser/Userinfo',
-			})
+		// this.props.dispatch({
+		// 		type: 'LoginUser/Userinfo',
+		// 	})
 			// this.props.dispatch({
 			// 	type: 'PersonalCenter/UserPersonal',
 			// })
 			// console.log(this.state.UserStatus)
 			/*获取学生信息*/
 			console.log('本地cookie信息',this.state.UserStatus)
-		$.get(`${HTTP_URL}/biz/applier?userId=${this.state.UserStatus.userId}`, function(result) {
-			console.log('biz/applier/id',result)
+		$.get(`${HTTP_URL}/biz/applier/${this.state.ResisterData.id}`, function(result) {
+			this.setState({UserData:result.content})
 		}.bind(this));
 	}
 	componentWillUnmount() {
@@ -205,7 +207,8 @@ class UserIndex extends React.Component {
 	}
 	render() {
 		const {
-			TabCurrent
+			TabCurrent,
+			UserData
 		} = this.state;
 		// console.log(this)
 		return (
@@ -217,9 +220,9 @@ class UserIndex extends React.Component {
 			       </div>
 			       <div className={styles.UserDetaiText}>
 				        <p>欢迎来到个人中心</p>
-				        <h2>颜晓飞</h2>
-				        <p>基本信息：男 | 25岁 | 湖北城市建设职业技术学院 | 电子商务12级<Link to="/login_index/register">&nbsp;&nbsp;资料修改</Link></p>
-				        <p>联系方式：15337238799</p>
+				        <h2>{UserData.username}</h2>
+				        <p>基本信息：{UserData.username} | {UserData.sex=='b'?'女':'男'} | {UserData.age}岁 | {UserData.school} | {UserData.major}{UserData.grade}<Link to="/login_index/register">&nbsp;&nbsp;资料修改</Link></p>
+				        <p>联系方式：{UserData.phone}</p>
 				        <p>资料完善度：</p>
 				        <div style={{width:300}}><Progress percent={30} format={percent => `${percent}%`} status="exception"/></div>
 			       </div>

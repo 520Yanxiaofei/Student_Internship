@@ -72,6 +72,7 @@ class Register extends React.Component {
 	componentWillUnmount() {
 		window.scrollTo(0, 0);
 	}
+	
 	next() {
 		const {
 			current,
@@ -228,6 +229,13 @@ class Register extends React.Component {
 						...registData,
 						...values
 					}
+				}
+			})
+			this.props.dispatch({
+				type:'PersonalCenter/ApplierAdd',
+				payload:{
+					...registData,
+					...values
 				}
 			})
 		});
@@ -579,7 +587,7 @@ class Register extends React.Component {
 				          )}
 				        </FormItem>
 				        <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
-				        <Button type="primary" size='large' onClick={this.handleSubmit2}>已完善，开始注册</Button>
+				        <Button type="primary" loading={loading0} size='large' onClick={this.handleSubmit2}>已完善，开始注册</Button>
 				         <Button size='large'  style={{ marginLeft:10 }} onClick={()=>this.prev()}>返回上一步</Button>
 				        </FormItem>
 				      </Form>
