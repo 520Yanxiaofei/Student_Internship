@@ -23,7 +23,6 @@ import styles from './index.less';
 import Stepmodal from '../../components/modal/Steps_modal';
 const Option = AutoComplete.Option;
 
-
 /*实习岗位板块*/
 
 /*搜索*/
@@ -62,31 +61,51 @@ function renderOption(item) {
 
 
 
-
 class StationIndex extends React.Component {
 	state = {
 		dataSource: [],
-		visible:false,
-		shenfont:0
+		visible: false,
+		shenfont: 0
 	}
-
 	handleSearch = (value) => {
 		this.setState({
 			dataSource: value ? searchResult(value) : [],
 		});
 	}
-	handvisible(record){
-       console.log(record)
-		// this.setState({
-		// 	visible:true
-		// })
-		
+	handvisible(record) {
 		this.props.dispatch({
-				type:'PersonalCenter/ApplierAddsd',
-				payload:{
-					...record,
-				}
+				type: 'PersonalCenter/StationCookie'
 			})
+			// if (cookieif != undefined) {
+			// 	if (cookieif.username != undefined) {
+			// 		this.setState({
+			// 			visible: true
+			// 		})
+			// 	}
+			// } else {
+			// 	console.log(this)
+			// 	browserHistory.push('/#/login/1')
+			// 		// this.props.location.hash('/#/login/1')
+			// 		// routerRedux.push('/login')
+			// 		// window.location.href = '/#/login';
+			// }
+
+
+
+		// this.props.dispatch({
+		// 		type:'PersonalCenter/ApplierAddsd',
+		// 		payload:{
+		// 			...record,
+		// 		}
+		// 	})
+	}
+	handleCancel() {
+		this.props.dispatch({
+			type: 'PersonalCenter/showloading',
+			payload: {
+				visible: false
+			}
+		})
 	}
 	componentDidMount() {
 		this.props.dispatch({
@@ -108,9 +127,13 @@ class StationIndex extends React.Component {
 
 		const {
 			StationListData,
-			loading
-		} = this.props.StationManage
-        /*搜索结果*/
+			loading,
+		} = this.props.StationManage;
+		const {
+			visible
+		} = this.props.PersonalCenter;
+
+		/*搜索结果*/
 		const columns = [{
 			title: '岗位名称',
 			dataIndex: 'station_name',
@@ -135,7 +158,7 @@ class StationIndex extends React.Component {
 		}, {
 			title: '操作',
 			width: '10%',
-			render: (text,record) => {
+			render: (text, record) => {
 				return (
 					<Button onClick={()=>this.handvisible(record)}>申请职位</Button>
 				)
@@ -239,7 +262,7 @@ class StationIndex extends React.Component {
                 <Pagination showSizeChanger {...PagintaionData}/>
                 </div>
              </div>
-             <Stepmodal visible={this.state.visible} handleCancel={()=>this.setState({visible:false})}/>
+             <Stepmodal visible={visible} handleCancel={()=>this.handleCancel()}/>
           </Col>
          </Row>
       </div>
@@ -253,7 +276,7 @@ class StationIndex extends React.Component {
 function mapStateToProps(props) {
 	return {
 		StationManage: props.StationManage,
-		PersonalCenter:props.PersonalCenter
+		PersonalCenter: props.PersonalCenter
 	};
 }
 

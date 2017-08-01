@@ -26,7 +26,8 @@ export default {
 		loading1: false,
 		/*注册信息-学生*/
 		registData: [],
-		student_thuimg: {}
+		student_thuimg: {},
+		visible: false,
 	},
 
 	subscriptions: {
@@ -91,11 +92,13 @@ export default {
 				data
 			} = yield call(ApplierAdd, payload);
 			if (data.status == 'SUCCESS') {
+				message.success('注册成功！')
 				cookie.save('ResigerData', data.content);
 				yield put({
 					type: 'showloading',
 					payload: {
-						loading0: false
+						loading0: false,
+						visible: false,
 					}
 				})
 			} else {
@@ -120,15 +123,35 @@ export default {
 			} = yield call(ApplierAddsd, payload);
 			if (data.status == 'SUCCESS') {
 				console.log(data)
-				// cookie.save('ResigerData', data.content);
-				// yield put({
-				// 	type: 'showloading',
-				// 	payload: {
-				// 		loading0: false
-				// 	}
-				// })
+					// cookie.save('ResigerData', data.content);
+					// yield put({
+					// 	type: 'showloading',
+					// 	payload: {
+					// 		loading0: false
+					// 	}
+					// })
 			} else {
 				// message.success(data.message)
+			}
+		},
+		/*申请判断登录*/
+
+		* StationCookie({
+			payload
+		}, {
+			call,
+			put
+		}) {
+			const UserStatus = cookie.load('DemoUser');
+			if (UserStatus != undefined) {
+				yield put({
+					type: 'showloading',
+					payload: {
+						visible: true
+					}
+				})
+			} else {
+				yield put(routerRedux.push('/login/1'));
 			}
 		},
 	},

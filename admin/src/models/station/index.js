@@ -90,6 +90,44 @@ export default {
 				message.success(data.message)
 			}
 		},
+		/*
+         添加
+        */
+		* StationDel({
+			payload
+		}, {
+			call,
+			put,
+			select
+		}) {
+			yield put({
+				type: 'showloading',
+				payload: {
+					loading: true
+				}
+			})
+			const Datakey = yield select((state) => state.StationManage.StationListData.list);
+
+			const {
+				data
+			} = yield call(StationDel, {
+				id: payload.id
+			});
+			if (data.status == 'SUCCESS') {
+				message.success(data.message)
+				yield put({
+					type: 'showloading',
+					payload: {
+						loading: false,
+						StationListData: {
+							list: Datakey.splice(payload.index, 1)
+						}
+					}
+				})
+			} else {
+				message.success(data.message)
+			}
+		},
 	},
 	reducers: {
 		showloading(state, action) {

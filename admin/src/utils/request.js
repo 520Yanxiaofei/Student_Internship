@@ -3,7 +3,9 @@ import {
   message,
 } from 'antd';
 import cookie from 'react-cookie';
-import GUARD_URL from './URL';
+import {
+  HTTP_URL
+} from './URL';
 
 function parseJSON(response) {
   return response.json();
@@ -46,7 +48,7 @@ function checkStatus(response) {
 
 export default function request(url, options) {
   let Token = cookie.load('userdata');
-  return fetch(GUARD_URL + url, {
+  return fetch(HTTP_URL + url, {
       //return fetch(`http://192.168.28.233:8080` + url, {
       method: options.method,
       headers: {

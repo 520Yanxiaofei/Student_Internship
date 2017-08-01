@@ -22,58 +22,10 @@ import CountUp from 'react-countup';
 import QueueAnim from 'rc-queue-anim';
 import styles from './index.less';
 import Localhostd from '../../components/public/localhost';
+import {
+	HTTP_URL
+} from '../../utils/URL';
 
-
-const columnsNetdata = [{
-	title: '序号',
-	dataIndex: 'key',
-	key: 'key',
-	width: '5%',
-	render: (text) => {
-		return (
-			<span className={styles.TableTag}>{text}</span>
-		)
-	}
-}, {
-	title: '岗位名称',
-	dataIndex: 'station_name',
-	key: 'station_name',
-	width: '20%'
-}, {
-	title: '岗位分类',
-	dataIndex: 'station_category',
-	key: 'station_category',
-	width: '20%'
-}, {
-	title: '工作城市',
-	dataIndex: 'station_address',
-	key: 'station_tag',
-	width: '10%',
-}, {
-	title: '岗位标签',
-	dataIndex: 'station_tag',
-	key: 'station_tag',
-	width: '20%',
-	render: (text) => {
-		return (
-			<span>{text.split(',')}</span>
-		)
-	}
-},{
-	title: '发布日期',
-	dataIndex: 'task_ip',
-	key: 'task_ip',
-	width: '10%'
-}, {
-	title: '操作',
-	dataIndex: 'task_port',
-	key: 'task_port',
-	render: () => {
-		return (
-			<div><Button>详情</Button> | <Button>编辑</Button> | <Button>删除</Button></div>
-		)
-	}
-}];
 
 class StationList extends React.Component {
 	state = {
@@ -99,6 +51,23 @@ class StationList extends React.Component {
 		this.setState({
 			selectedRowKeys
 		});
+	};
+	/*删除职位*/
+	StationDel(id, key) {
+		$.ajax({
+			url: `${HTTP_URL}/biz/post/${id}`,
+			type: 'DELETE',
+			success: function(result) {
+				console.log(result)
+			}
+		});
+		// this.props.dispatch({
+		// 	type: 'StationManage/StationDel',
+		// 	payload: {
+		// 		id: id,
+		// 		index: key
+		// 	}
+		// })
 	}
 	render() {
 		const content = (
@@ -121,6 +90,56 @@ class StationList extends React.Component {
 			onChange: this.onSelectChange,
 		};
 		const hasSelected = selectedRowKeys.length > 0;
+		const columnsNetdata = [{
+			title: '序号',
+			dataIndex: 'key',
+			key: 'key',
+			width: '5%',
+			render: (text) => {
+				return (
+					<span className={styles.TableTag}>{text}</span>
+				)
+			}
+		}, {
+			title: '岗位名称',
+			dataIndex: 'station_name',
+			key: 'station_name',
+			width: '20%'
+		}, {
+			title: '岗位分类',
+			dataIndex: 'station_category',
+			key: 'station_category',
+			width: '20%'
+		}, {
+			title: '工作城市',
+			dataIndex: 'station_address',
+			key: 'station_address',
+			width: '10%',
+		}, {
+			title: '岗位标签',
+			dataIndex: 'station_tag',
+			key: 'station_tag',
+			width: '20%',
+			render: (text) => {
+				return (
+					<span>{text.split(',')}</span>
+				)
+			}
+		}, {
+			title: '发布日期',
+			dataIndex: 'task_ip',
+			key: 'task_ip',
+			width: '10%'
+		}, {
+			title: '操作',
+			dataIndex: 'task_port',
+			key: 'task_port',
+			render: (text, record) => {
+				return (
+					<div><Button>详情</Button> | <Button>编辑</Button> | <Button onClick={()=>this.StationDel(record.id,record.key)}>删除</Button></div>
+				)
+			}
+		}];
 
 		return (
 			<div>

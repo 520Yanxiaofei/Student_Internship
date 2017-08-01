@@ -15,7 +15,7 @@ export default {
 	state: {
 		loading: false,
 		StationListData: [],
-		data: []
+		data: [],
 	},
 
 	subscriptions: {
@@ -58,6 +58,7 @@ export default {
 				// message.success(data.message)
 			}
 		},
+
 	},
 	reducers: {
 		showloading(state, action) {

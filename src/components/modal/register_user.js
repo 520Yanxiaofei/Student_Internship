@@ -72,7 +72,7 @@ class Register extends React.Component {
 	componentWillUnmount() {
 		window.scrollTo(0, 0);
 	}
-	
+
 	next() {
 		const {
 			current,
@@ -232,8 +232,8 @@ class Register extends React.Component {
 				}
 			})
 			this.props.dispatch({
-				type:'PersonalCenter/ApplierAdd',
-				payload:{
+				type: 'PersonalCenter/ApplierAdd',
+				payload: {
 					...registData,
 					...values
 				}
@@ -343,7 +343,7 @@ class Register extends React.Component {
 							              required: true, message: '不能为空!',
 							            }],
 							          })(
-							            <Input type='number' />
+							            <Input  placeholder="请输入年龄" type='number' />
 							          )}
 							        </FormItem>
 							        <FormItem
@@ -415,7 +415,7 @@ class Register extends React.Component {
 							              required: true, message: '不能为空!',
 							            }],
 							          })(
-							            <Input />
+							            <Input  placeholder="请输入邮箱"/>
 							          )}
 							        </FormItem>
 							        <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
@@ -558,7 +558,7 @@ class Register extends React.Component {
 				            <Input type="number" placeholder="请输入确认卡号" onBlur={this.handleConfirmBlur} />
 				          )}
 				        </FormItem>
-				        <FormItem
+				        {/*<FormItem
 				          {...formItemLayout}
 				          label="手机号"
 				          hasFeedback
@@ -585,7 +585,7 @@ class Register extends React.Component {
 				          })(
 				            <Input style={{width:160}} placeholder='请输入短信验证码'/>
 				          )}
-				        </FormItem>
+				        </FormItem>*/}
 				        <FormItem  wrapperCol={{ span: 18, offset: 6 }}>
 				        <Button type="primary" loading={loading0} size='large' onClick={this.handleSubmit2}>已完善，开始注册</Button>
 				         <Button size='large'  style={{ marginLeft:10 }} onClick={()=>this.prev()}>返回上一步</Button>

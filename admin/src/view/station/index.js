@@ -65,14 +65,14 @@ class StationAdd extends React.Component {
 				console.log('Received values of form: ', values);
 			}
 			if (!values.station_tag) return null;
-			var date=new Date();
-            var mydate=date.getDate();
-            var modate=date.getMonth()+1;
-			if(mydate<10){
-               mydate='0'+mydate
+			var date = new Date();
+			var mydate = date.getDate();
+			var modate = date.getMonth() + 1;
+			if (mydate < 10) {
+				mydate = '0' + mydate
 			}
-			if(modate<10){
-                 modate='0'+modate;
+			if (modate < 10) {
+				modate = '0' + modate;
 			}
 			this.props.dispatch({
 				type: 'StationManage/StationAdd',
@@ -80,7 +80,7 @@ class StationAdd extends React.Component {
 					...values,
 					station_tag: values.station_tag.join(','),
 					htmlBody: this.state.html,
-					date:`${date.getFullYear()}-${mydate}-${modate}`
+					date: `${date.getFullYear()}-${modate}-${mydate}`
 				}
 			})
 		});
@@ -149,10 +149,23 @@ class StationAdd extends React.Component {
 					        </FormItem>
 					        <FormItem
 					          {...formItemLayout}
+					          label="企业名称"
+					          hasFeedback
+					        >
+					          {getFieldDecorator('company_name', {
+					            rules: [{
+					              required: true, message: '企业名称不能为空!',
+					            }],
+					          })(
+					            <Input placeholder='请填写企业名称'/>
+					          )}
+					        </FormItem>
+					        <FormItem
+					          {...formItemLayout}
 					          label="工作城市"
 					          hasFeedback
 					        >
-					          {getFieldDecorator('address', {
+					          {getFieldDecorator('station_address', {
 					          	initialValue:'',
 					            rules: [{
 					              required: true, message: '不能为空!',
@@ -171,7 +184,12 @@ class StationAdd extends React.Component {
 					              required: true, message: '岗位行业不能为空!',
 					            }],
 					          })(
-					            <Input placeholder='请选择岗位行业'/>
+					            <Select
+								    placeholder="请选择岗位行业"
+								    >
+								    <Option value="互联网IT">互联网IT</Option>
+								    <Option value="金融类">金融类</Option>
+								  </Select>
 					          )}
 					        </FormItem>
 					        <FormItem

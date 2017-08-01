@@ -86,6 +86,7 @@ export default {
 			if (data.status == 'SUCCESS') {
 				if (payload.userType == '1') {
 					yield put(routerRedux.push('/'))
+						// window.history.back(-1)
 					cookie.save('DemoUser', data.content);
 					cookie.remove('CodeTimes');
 				}
@@ -155,10 +156,6 @@ export default {
 			const {
 				data
 			} = yield call(Smsvcode, payload)
-			yield put(routerRedux.push('/'))
-			cookie.remove('CodeTimec');
-			cookie.remove('CodeTimes');
-			cookie.remove('DemoUser')
 
 		},
 		/*退出*/
@@ -171,6 +168,10 @@ export default {
 			// const {
 			// 	data
 			// } = yield call(Smsvcode, payload)
+			window.history.back(-1)
+			cookie.remove('CodeTimec');
+			cookie.remove('CodeTimes');
+			cookie.remove('DemoUser')
 
 		},
 
